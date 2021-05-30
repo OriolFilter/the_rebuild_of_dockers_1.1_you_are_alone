@@ -1,0 +1,49 @@
+FROM networkboot/dhcpd:latest
+#FROM wastrachan/dhcpd:latest
+
+RUN mkdir data
+
+RUN sysctl -p /etc/sysctl.conf
+
+RUN printf "\
+\n# DHCP config\n\
+\n\
+subnet 10.10.6.0 netmask 255.255.255.0 {\n\
+  option routers router.OFA.itb; # Canviar a router.OFA.itb si el dns tira b\n\
+  option broadcast-address 10.10.6.255;\n\
+  option subnet-mask 255.255.255.0;\n\
+\n\
+  option domain-name \"OFA.itb\";\n\
+  option domain-name-servers 10.10.6.1;\n\
+\n\
+\n\
+  default-lease-time 1800; # 30 min\n\
+  max-lease-time 43200; # 12h maxim\n\
+\n\
+  range 10.10.6.3 10.10.6.100;\n\
+  range 10.10.6.102 10.10.6.254;\n\
+\n\
+\n\
+\n\
+	host bdd {\n\
+		hardware ethernet 00:00:00:00:00:00;\n\
+		fixed-address 10.10.6.2;\n\
+	}\n\
+	host equ1 {\n\
+		hardware ethernet 00:00:00:00:00:01;\n\
+		fixed-address 10.10.6.101;\n\
+	}\n\
+	host equ2 {\n\
+		hardware ethernet 00:00:00:00:00:02;\n\
+		fixed-address 10.10.6.102;\n\
+	}\n\
+}\n" | tee /data/dhcpd.conf
+
+
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
+# https://docs.docker.com/engine/reference/commandline/build/
+
+# https://redgreenrepeat.com/2018/04/20/how-to-conditionally-create-a-file-in-dockerfile-build/
+
+# https://stackoverflow.com/questions/37976241/writing-data-to-file-in-dockerfile

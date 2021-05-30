@@ -1,0 +1,67 @@
+# The format of this file is documented in the dhcpd.leases(5) manual page.
+# This lease file was written by isc-dhcp-4.3.5
+
+# authoring-byte-order entry is generated, DO NOT DELETE
+authoring-byte-order little-endian;
+
+lease 10.10.6.4 {
+  starts 5 2021/01/08 00:20:07;
+  ends 5 2021/01/08 00:50:07;
+  tstp 5 2021/01/08 00:50:07;
+  cltt 5 2021/01/08 00:20:07;
+  binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+}
+lease 10.10.6.3 {
+  starts 1 2021/02/01 15:43:03;
+  ends 1 2021/02/01 16:13:03;
+  tstp 1 2021/02/01 16:13:03;
+  cltt 1 2021/02/01 15:43:03;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:f5:b6:57;
+  client-hostname "sjo";
+}
+server-duid "\000\001\000\001'\215:\207\010\000'\312[\335";
+
+lease 10.10.6.3 {
+  starts 1 2021/02/01 15:54:30;
+  ends 1 2021/02/01 16:24:30;
+  cltt 1 2021/02/01 15:54:30;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:f5:b6:57;
+  client-hostname "sjo";
+}
+lease 10.10.6.3 {
+  starts 1 2021/02/01 16:05:52;
+  ends 1 2021/02/01 16:35:52;
+  cltt 1 2021/02/01 16:05:52;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:f5:b6:57;
+  client-hostname "sjo";
+}
+lease 10.10.6.3 {
+  starts 1 2021/02/01 16:17:41;
+  ends 1 2021/02/01 16:47:41;
+  cltt 1 2021/02/01 16:17:41;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:f5:b6:57;
+  client-hostname "sjo";
+}
+lease 10.10.6.3 {
+  starts 1 2021/02/01 16:30:39;
+  ends 1 2021/02/01 17:00:39;
+  cltt 1 2021/02/01 16:30:39;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:f5:b6:57;
+  client-hostname "sjo";
+}

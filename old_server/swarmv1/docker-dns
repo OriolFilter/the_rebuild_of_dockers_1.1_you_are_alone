@@ -1,0 +1,73 @@
+FROM sameersbn/bind:latest
+
+# named.conf.local
+
+#RUN BINDFOLDER="/data"
+#
+#RUN printf "\
+# zone \"OFA.itb.\" {\
+#    type master;\
+#    file \"$BINDFOLDER/OFA.itb\";\
+##      allow-query { any; };\
+#};\
+#\
+#\
+#zone \"6.10.10.in-addr.arpa\" {\
+#    type master;\
+#    file  \"$BINDFOLDER/db.6.10.10\";\
+#};" | tee  $BINDFOLDER/named.conf.local
+#
+#
+## OFA.itb 
+#
+#RUN printf "\
+#; Definició de la zona ausias.am\
+#\$TTL 604800\
+#@ IN SOA router.OFA.itb. root.OFA.itb. (\
+#                 20141003    ; versió\
+#            1D    ; temps d’espera per refrescar\
+#            2H    ; temps de reintent\
+#            1W    ; Caducitat\
+#            2D )    ; ttl\
+#\
+#\
+#;\
+#@		IN      NS   router.OFA.itb.\
+#@		IN      A    10.10.6.1\
+#localhost       IN	A    127.0.0.1\
+#router          IN	A    10.10.6.1\
+#bdd             IN	A    10.10.6.2\
+#equ1            IN	A    10.10.6.101\
+#equ2            IN	A    10.10.6.102\
+#\
+#checkprofe	IN	CNAME router.OFA.itb.\
+#\
+#\
+#\
+#web11		IN	CNAME router.OFA.itb.\
+#web22		IN	CNAME router.OFA.itb.\
+#\
+#ftp		IN	CNAME router.OFA.itb.\
+#" | tee $BINDFOLDER/OFA.itb
+#
+#
+## db.6.10.10
+#
+#RUN printf "\
+#\$TTL 604800\
+#6.10.10.in-addr.arpa. IN SOA router.OFA.itb. router.root.OFA.itb. (\
+#                  20141003    ; versió\
+#            1D    ; temps d’espera per refrescar\
+#            2H    ; temps de reintent\
+#            1W    ; Caducitat\
+#            2D )    ; ttl\
+#\
+#           IN    NS         router.OFA.itb.\
+#1          IN    PTR        router.OFA.itb.\
+#2          IN    PTR        bdd.OFA.itb.\
+#101        IN    PTR        equ1.OFA.itb.\
+#102        IN    PTR        equ2.OFA.itb.\
+#" | tee $BINDFOLDER/db.6.10.10
+#
+#
+## https://hub.docker.com/r/sameersbn/bind

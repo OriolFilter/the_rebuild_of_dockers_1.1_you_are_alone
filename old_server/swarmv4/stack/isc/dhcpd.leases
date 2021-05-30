@@ -1,0 +1,61 @@
+# The format of this file is documented in the dhcpd.leases(5) manual page.
+# This lease file was written by isc-dhcp-4.3.5
+
+# authoring-byte-order entry is generated, DO NOT DELETE
+authoring-byte-order little-endian;
+
+lease 10.10.6.4 {
+  starts 5 2021/01/08 00:20:07;
+  ends 5 2021/01/08 00:50:07;
+  tstp 5 2021/01/08 00:50:07;
+  cltt 5 2021/01/08 00:20:07;
+  binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+}
+lease 10.10.6.3 {
+  starts 0 2021/01/10 01:35:42;
+  ends 0 2021/01/10 02:05:42;
+  tstp 0 2021/01/10 02:05:42;
+  cltt 0 2021/01/10 01:35:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+  uid "\001\010\000'<U\312";
+  client-hostname "user-VirtualBox";
+}
+server-duid "\000\001\000\001'\215\030F\010\000'\017\373B";
+
+lease 10.10.6.3 {
+  starts 0 2021/01/10 01:50:42;
+  ends 0 2021/01/10 02:20:42;
+  cltt 0 2021/01/10 01:50:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+  uid "\001\010\000'<U\312";
+  client-hostname "user-VirtualBox";
+}
+lease 10.10.6.3 {
+  starts 0 2021/01/10 02:05:42;
+  ends 0 2021/01/10 02:35:42;
+  cltt 0 2021/01/10 02:05:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+  uid "\001\010\000'<U\312";
+  client-hostname "user-VirtualBox";
+}
+lease 10.10.6.3 {
+  starts 0 2021/01/10 02:20:42;
+  ends 0 2021/01/10 02:50:42;
+  cltt 0 2021/01/10 02:20:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:3c:55:ca;
+  uid "\001\010\000'<U\312";
+  client-hostname "user-VirtualBox";
+}

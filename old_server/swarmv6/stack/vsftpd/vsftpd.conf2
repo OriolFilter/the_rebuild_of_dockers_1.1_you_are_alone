@@ -1,0 +1,78 @@
+## Config File for vsftpd service
+
+listen=YES
+listen_ipv6=NO
+max_per_ip=5
+syslog_enable=YES
+
+
+anonymous_enable=YES
+dirmessage_enable=YES
+ftpd_banner=Welcome to FTP server from domain OFA.itb
+
+use_localtime=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+
+rsa_cert_file=/shared/ssl/servidor.crt
+rsa_private_key_file=/shared/ssl/servidor.key
+
+ssl_enable=YES
+#force_local_logins_ssl=YES
+
+write_enable=YES
+local_umask=002
+
+
+chroot_local_user=YES
+local_enable=YES
+userlist_deny=NO
+userlist_enable=YES
+userlist_file=/shared/ftp/user_list
+user_config_dir=/shared/ftp/user_conf
+
+
+
+
+
+
+## Server Config
+#anonymous_enable=NO
+#local_enable=YES
+#write_enable=YES
+#local_umask=022
+#dirmessage_enable=YES
+#
+## Security and User auth
+#chroot_local_user=YES
+#pam_service_name=vsftpd_virtual
+#virtual_use_local_privs=YES
+#chmod_enable=NO
+#user_config_dir=/etc/vsftpd/user_conf
+#user_sub_token=$USER
+##local_root=/srv/$USER
+#local_root=/srv/
+#userlist_enable=NO
+#allow_writeable_chroot=YES
+#
+## Logging
+#log_ftp_protocol=YES
+#xferlog_enable=YES
+#xferlog_std_format=YES
+##xferlog_file=/dev/stdout
+#syslog_enable=NO
+#dual_log_enable=YES
+#
+## Remap all login users to this username
+#guest_enable=YES
+#guest_username=ftp
+#hide_ids=YES
+#
+## Networking
+#connect_from_port_20=YES
+#listen=YES
+#listen_ipv6=NO
+#tcp_wrappers=YES
+#pasv_min_port=4559
+#pasv_max_port=4564
+#

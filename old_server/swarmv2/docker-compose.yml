@@ -1,0 +1,82 @@
+version: '3.7'
+services:
+  dns:
+    image: sameersbn/bind:latest
+#    container_name: bind
+    ports:
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
+      - target: 53
+        published: 53
+        protocol: tcp
+        mode: host
+      - target: 1000
+        published: 1000
+        mode: host
+    volumes:
+      - ./stack/bind/:/data/bind/etc/
+#      - ./config/bind/OFA.itb:/data/bind/etc/OFA.itb
+#      - ./config/bind/named.conf.local:/data/bind/etc/named.conf.local
+#      - ./config/bind/db.6.10.10:/data/bind/etc/db.6.10.10
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    networks:
+        - outside
+  dhcp:
+    image: networkboot/dhcpd:latest
+#    container_name: isc
+    ports:
+      - target: 67
+        published: 67
+        protocol: tcp
+        mode: host
+      - target: 68
+        published: 68
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./stack/isc:/data
+#      - ./config/isc/dhcpd.conf:/data/dhcpd.conf
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    networks:
+        - outside
+  nginx:
+    image: nginx:latest
+#    container_name: nginx
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+#  environment:
+#   - NGINX_HOST=web11.ofa.itb
+#   - NGINX_PORT=80
+    volumes:
+      - ./stack/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./stack/nginx/www:/var/www
+      - ./stack/cert_ssl:/ssl
+
+
+networks:
+  outside:
+    external:
+      name: "host"

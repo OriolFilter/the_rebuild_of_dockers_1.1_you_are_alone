@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  dhcp:
+    build:
+        context: .
+        dockerfile: docker-dhcp
+    ports:
+      - "68:68"
+      - "67:67"
+#      - "68:68/udp"
+#      - "67:67/udp"
+#    volumes:
+#      - ./config:/config
+#      - ./test:/tmp
+    network_mode: "host"
+    restart: unless-stopped
+  dns:
+    build:
+        context: .
+        dockerfile: docker-dns
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+#      - "1023:1023"
+      - "10000:10000"
+    volumes:
+       - ./bind:/data/bind/etc
+    network_mode: "host"
+    restart: unless-stopped

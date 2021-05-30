@@ -1,0 +1,36 @@
+version: "3.3"
+services:
+  dhcp:
+    image: "swarm_dhcp"
+#    image: docker-dhcp
+    ports:
+      - "68:68"
+        mode: host
+      - "67:67"
+        mode: host
+#      - "68:68/udp"
+#      - "67:67/udp"
+#    volumes:
+#      - ./config:/config
+#      - ./test:/tmp
+#    network_mode: "outside"
+#    restart: unless-stopped
+  dns:
+    image: "swarm_dns"
+#    image: docker-dns
+    ports:
+      - "53:53/tcp"
+        mode: host
+      - "53:53/udp"
+        mode: host
+#      - "1023:1023"
+      - "10000:10000"
+        mode: host
+    volumes:
+       - ./bind:/data/bind/etc
+#    network_mode: "outside"
+#    restart: unless-stopped
+#networks:
+#  outside:
+#    external:
+#      name: "host"

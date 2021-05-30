@@ -1,0 +1,29 @@
+
+
+; Definició de la zona ausias.am
+$TTL 604800
+@ IN SOA router.OFA.itb. root.OFA.itb. (
+                 20141003    ; versió
+            1D    ; temps d’espera per refrescar
+            2H    ; temps de reintent
+            1W    ; Caducitat
+            2D )    ; ttl
+
+
+;
+@		IN      NS   router.OFA.itb.
+@		IN      A    10.10.6.1
+localhost       IN	A    127.0.0.1
+router          IN	A    10.10.6.1
+bdd             IN	A    10.10.6.2
+equ1            IN	A    10.10.6.101
+equ2            IN	A    10.10.6.102
+
+checkprofe	IN	CNAME router.OFA.itb.
+
+
+
+web11		IN	CNAME router.OFA.itb.
+web22		IN	CNAME router.OFA.itb.
+
+ftp		IN	CNAME router.OFA.itb.

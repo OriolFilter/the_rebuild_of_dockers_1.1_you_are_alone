@@ -9,8 +9,7 @@ M08 - UF 1
 > https://classroom.google.com/u/0/c/MTY0Mzc2OTc0NjM2/a/MTkyOTU3NDE0NDE5/details
 > 
 > https://classroom.google.com/u/0/c/MTY0Mzc2OTc0NjM2/a/MTg3Mjg0MTkyMjE3/details
-> 
-> 
+
 M08 - UF 2
 
 > WEB FTP
@@ -30,9 +29,9 @@ M08 - UF 3
 > Postfix-Missatgeria-Correu
 > 
 > Checks
-> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MjA5MjM1Mjg5NjU1/details
-> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MjA5MjM1Mjg5NzMy/details
-> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MTczMDczNzk2MzE0/details
+> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MjA5MjM1Mjg5NjU1/details \
+> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MjA5MjM1Mjg5NzMy/details \
+> https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MTczMDczNzk2MzE0/details \
 > https://classroom.google.com/u/0/c/MTY0Mzc1NDY4NTE4/a/MTczMDczNzk2NDQ5/details
 
 M08 - UF 4 
@@ -43,12 +42,9 @@ M08 - UF 4
 > https://classroom.google.com/u/0/c/MTY0Mzc3NTE4Njc4/a/MTg1NzA1NTkxMjI3/details
 > https://classroom.google.com/u/0/c/MTY0Mzc3NTE4Njc4/a/MTg1NzA4Mjc0OTgx/details
 > https://classroom.google.com/u/0/c/MTY0Mzc3NTE4Njc4/a/MTg1NzA1NTkxMjYx/details
+> 
+> LLIURAMENT:
 
-Docker swarm
-> Scale
-> https://docs.docker.com/engine/swarm/swarm-tutorial/scale-service/
-
- 
  
 M11 Normativa lliurament
 > https://classroom.google.com/u/0/c/MTY0Mzc3MjgzMDUw/m/MzQwNTI4NTQ1NDVa/details
