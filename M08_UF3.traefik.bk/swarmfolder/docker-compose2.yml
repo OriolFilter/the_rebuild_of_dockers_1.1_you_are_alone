@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  postfix_srv:
+    image: classcat/postfix-dovecot
+    ports:
+      - 2022:22
+      - 25:25
+      - 110:110
+      - 143:143
+    environment:
+      ROOT_PASSWORD: mypassword
+      HOSTNAME: mail.ofa.itb
+      DOMAINNAME: ofa.itb
+      USERS: profe:chequejant,alumne:a
+    volumes:
+      - ./stack/postfix/mail:/etc/postfix/mail
+    networks:
+      - outside
+
+networks:
+  outside:
+    external:
+      name: "host"
+
+
