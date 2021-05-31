@@ -2,6 +2,7 @@
 
 > https://doc.traefik.io/traefik/user-guides/docker-compose/basic-example/
 
+> https://doc.traefik.io/traefik/middlewares/overview/
 
 Docker swarm
 > Scale

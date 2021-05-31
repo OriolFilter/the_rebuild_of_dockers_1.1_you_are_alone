@@ -11,9 +11,6 @@ services:
         published: 53
         protocol: tcp
         mode: host
-      - target: 10000
-        published: 10000
-        mode: host
     volumes:
       - ./stack/bind/:/data/bind/etc/
     deploy:
@@ -85,6 +82,7 @@ services:
         - "./stack/nginx/www/web11/html/shared:/home/b/shared_web/:rw"
         - "./stack/shared_dir:/home/a/shared_dir/:rw"
         - "./stack/shared_dir:/home/b/shared_dir/:rw"
+        - "./stack/shared_dir:/home/profe/shared_dir/:rw"
 
 networks:
   outside:
