@@ -1,0 +1,29 @@
+# Dynamic configuration
+http:
+  middlewares:
+    secureHeaders:
+      headers:
+        sslRedirect: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+
+    user-auth:
+      basicAuth:
+        users:
+          - "raf:$apr1$MTqfVwiE$FKkzT5ERGFqwH9f3uipxA1"
+          - "prof:$6$mEX0LvImiOkKJYG0$Mu7l1we2hJ9u.tg8Jz8oSPXia5gN3AwSD5pMj5pDBul4YUEN29a/Z6cyRj/wGy8Fo9v5QJbf0P7Jtg2CfTT470"
+          - "a:$6$7wWtiHqIWlYMTdXj$2PJFotz1N9e/.MXCQI8RsG1qobSxZOxVh1mNnxoE4Thq1mr8kUYRvAC22plkDVfBnaqqY1aEbuKU2pW8rhF/O."
+
+tls:
+  options:
+    default:
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+      minVersion: VersionTLS12

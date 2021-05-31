@@ -3,10 +3,6 @@ services:
   nginx:
     image: nginx
     ports:
-      - target: 23
-        published: 23
-        protocol: tcp
-        mode: host
       - target: 80
         published: 80
         protocol: tcp
@@ -23,7 +19,10 @@ services:
       - ./stack/cert_ssl:/shared/ssl:ro
       - ./stack/users/passwd:/shared/users/passwd:ro
       - ./stack/users/groups:/shared/users/groups:ro
-      - logs:/logs:rw
+      - ./stack/nginx/www/web11/html/logs/web11.access.log:/logs/web11.access.log:rw
+      - ./stack/nginx/www/web11/html/logs/web22.access.log:/logs/web22.access.log:rw
+      - ./stack/nginx/www/web11/html/logs/web11.access.log:/logs/web11.error.log:rw
+      - ./stack/nginx/www/web11/html/logs/web22.access.log:/logs/web22.error.log:rw
 
   sftp:
     image: atmoz/sftp
@@ -47,6 +46,3 @@ services:
       - "./stack/shared_dir:/home/a/shared_dir/:rw"
       - "./stack/shared_dir:/home/b/shared_dir/:rw"
       - "./stack/shared_dir:/home/profe/shared_dir/:rw"
-volumes:
-  logs:
-

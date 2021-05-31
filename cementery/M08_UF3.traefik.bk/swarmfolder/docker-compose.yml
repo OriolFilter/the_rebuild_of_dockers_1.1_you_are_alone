@@ -1,0 +1,62 @@
+version: '3.3'
+services:
+  nginx11:
+    image: nginx
+    container_name: web11
+    volumes:
+      - ./stack/nginx/conf/conf.d/web11.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./stack/nginx/www:/var/www:ro
+      - ./stack/users/passwd:/shared/users/passwd:ro
+      - ./stack/users/groups:/shared/users/groups:ro
+      - logs:/logs:rw
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.web11.entrypoints=websecure"
+      - "traefik.http.routers.web11-secure.rule=Host(`web11`,`web11.ofa.itb`)"
+      - "traefik.http.routers.web11-secure.service=web11"
+      - "traefik.http.services.web11.loadbalancer.server.port=80"
+  nginx22:
+    image: nginx
+    container_name: web22
+    volumes:
+      - ./stack/nginx/conf/conf.d/web22.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./stack/nginx/www:/var/www:ro
+      - ./stack/users/passwd:/shared/users/passwd:ro
+      - ./stack/users/groups:/shared/users/groups:ro
+      - logs:/logs:rw
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.web22.entrypoints=websecure"
+      - "traefik.http.routers.web22-secure.rule=Host(`web22`,`web22.ofa.itb`)"
+      - "traefik.http.routers.web22-secure.service=web22"
+      - "traefik.http.services.web22.loadbalancer.server.port=80"
+
+  postfix_srv:
+    image: classcat/postfix-dovecot
+    container_name: "postfix"
+#    ports:
+#      - "2022:22"
+#      - "25:25"
+#      - "110:110"
+#      - "143:143"
+    environment:
+      ROOT_PASSWORD: mypassword
+      HOSTNAME: mail.ofa.itb
+      DOMAINNAME: ofa.itb
+      USERS: profe:chequejant,alumne:a
+    volumes:
+      - ./stack/postfix/mail:/etc/postfix/mail
+    network_mode: host
+
+networks:
+  proxy:
+    external: true
+volumes:
+  logs:
+

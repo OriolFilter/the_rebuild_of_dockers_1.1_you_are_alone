@@ -1,0 +1,21 @@
+version: "3.4"
+services:
+
+  traefik:
+    image: traefik:v2.1
+    command:
+      - "--providers.docker"
+    ports:
+      - "80:80"
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    image: nginx
+    labels:
+      - "traefik.http.routers.nginx.rule=Host(`web11.ofa.itb`)"
+  apache:
+    image: httpd
+    labels:
+      - "traefik.http.routers.apache.rule=Host(`web22.ofa.itb`)"
