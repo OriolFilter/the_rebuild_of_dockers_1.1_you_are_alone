@@ -35,6 +35,7 @@ sftp		IN	CNAME router.OFA.itb.
 mail		IN	CNAME router.OFA.itb.
 email		IN	CNAME mail.OFA.itb.
 carter		IN	CNAME mail.OFA.itb.
+guasap		IN	CNAME mail.OFA.itb.
 
 pop3		IN	CNAME mail.OFA.itb.
 imap		IN	CNAME mail.OFA.itb.
