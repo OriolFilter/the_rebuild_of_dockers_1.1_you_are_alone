@@ -23,9 +23,12 @@ services:
                    /usr/sbin/addgroup profe mail && \
                    /usr/sbin/addgroup a mail && \
                    /usr/sbin/addgroup b mail && \
-                   /bin/chmod ug+rw /var/mail/ -R && \
                    /usr/bin/touch /var/mail/a /var/mail/b /var/mail/alumne /var/mail/profe && \
                    /bin/chmod 777 /var/log/mail.log /var/log/mail.err /var/mail -R && \
+                   /bin/chown a:mail /var/mail/a && \
+                   /bin/chown b:mail /var/mail/b && \
+                   /bin/chown alumne:mail /var/mail/alumne && \
+                   /bin/chown profe:mail /var/mail/profe && \
                    /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"]
 
 networks:
