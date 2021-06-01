@@ -22,12 +22,12 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 
 
 #echo 'Pulling required images to speed up a little';
-#docker pull sameersbn/bind;
-#docker pull networkboot/dhcpd;
-#docker pull classcat/postfix-dovecot;
-#docker pull quantumobject/docker-openfire;
-#docker pull atmoz/sftp;
-#docker pull nginx;
+docker pull sameersbn/bind;
+docker pull networkboot/dhcpd;
+docker pull classcat/postfix-dovecot;
+docker pull quantumobject/docker-openfire;
+docker pull atmoz/sftp;
+docker pull nginx;
 
 cd ./$FILESFOLDER/;
 # Eliminem els fitxers .holder ja que s'han copiat les carpetes.
