@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  sftp:
+    image: atmoz/sftp
+    ports:
+      - target: 22
+        published: 23
+        protocol: tcp
+        mode: host
+    volumes:
+      # SSH connection keys
+      - "./stack/key_ssh/ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub:ro"
+      - "./stack/key_ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro"
+      - "./stack/key_ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro"
+      - "./stack/key_ssh/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro"
+
+      # USERS
+      # User_list
+      - "./stack/sftp_users.conf:/etc/sftp/users.conf:ro"
+      - "./stack/nginx/www/web11/html/shared:/home/a/shared_web/:rw"
+      - "./stack/nginx/www/web11/html/shared:/home/b/shared_web/:rw"
+      - "./stack/shared_dir:/home/a/shared_dir/:rw"
+      - "./stack/shared_dir:/home/b/shared_dir/:rw"
+      - "./stack/shared_dir:/home/profe/shared_dir/:rw"
