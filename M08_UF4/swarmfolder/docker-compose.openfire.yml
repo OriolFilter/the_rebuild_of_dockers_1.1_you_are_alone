@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  openfire:
+    container_name: openfire
+    image:  quantumobject/docker-openfire
+    ports:
+      - "5222:5222"
+      - "7443:7443"
+      - "7777:7777"
+      - "9090:9090"
+      - "7070:7070"
+    volumes:
+      - "./stack/openfire/lib_openfire:/var/lib/openfire:rw"
+      - "./stack/openfire/etc_openfire:/etc/openfire:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/openfire:/var/log/openfire:rw"
+networks:
+  outside:
+    external:
+      name: "host"

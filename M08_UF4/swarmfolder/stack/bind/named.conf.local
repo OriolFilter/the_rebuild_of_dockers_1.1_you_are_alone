@@ -1,0 +1,24 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+
+
+
+
+zone "OFA.itb." {
+    type master;
+    file "/etc/bind/OFA.itb";
+#      allow-query { any; };
+};
+
+
+zone "6.10.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.6.10.10";
+};
+

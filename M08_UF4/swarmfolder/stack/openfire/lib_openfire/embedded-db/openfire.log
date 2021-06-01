@@ -1,0 +1,170 @@
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C2*/SET SCHEMA PUBLIC
+ CREATE TABLE ofUser (   username              VARCHAR(64)     NOT NULL,   storedKey             VARCHAR(32),   serverKey             VARCHAR(32),   salt                  VARCHAR(32),   iterations            INTEGER,   plainPassword         VARCHAR(32),   encryptedPassword     VARCHAR(255),   name                  VARCHAR(100),   email                 VARCHAR(100),   creationDate          VARCHAR(15)     NOT NULL,   modificationDate      VARCHAR(15)     NOT NULL,   CONSTRAINT ofUser_pk PRIMARY KEY (username) )
+ CREATE INDEX ofUser_cDate_idx ON ofUser (creationDate)
+ CREATE TABLE ofUserProp (   username              VARCHAR(64)     NOT NULL,   name                  VARCHAR(100)    NOT NULL,   propValue             VARCHAR(4000)   NOT NULL,   CONSTRAINT ofUserProp_pk PRIMARY KEY (username, name) )
+ CREATE TABLE ofUserFlag (   username              VARCHAR(64)     NOT NULL,   name                  VARCHAR(100)    NOT NULL,   startTime             VARCHAR(15),   endTime               VARCHAR(15),   CONSTRAINT ofUserFlag_pk PRIMARY KEY (username, name) )
+ CREATE INDEX ofUserFlag_sTime_idx ON ofUserFlag (startTime)
+ CREATE INDEX ofUserFlag_eTime_idx ON ofUserFlag (endTime)
+ CREATE TABLE ofOffline (   username              VARCHAR(64)     NOT NULL,   messageID             BIGINT          NOT NULL,   creationDate          VARCHAR(15)     NOT NULL,   messageSize           INTEGER         NOT NULL,   stanza                LONGVARCHAR     NOT NULL,   CONSTRAINT ofOffline_pk PRIMARY KEY (username, messageID) )
+ CREATE TABLE ofPresence (   username              VARCHAR(64)     NOT NULL,   offlinePresence       LONGVARCHAR,   offlineDate           VARCHAR(15)     NOT NULL,   CONSTRAINT ofPresence_pk PRIMARY KEY (username) )
+ CREATE TABLE ofRoster (   rosterID              BIGINT          NOT NULL,   username              VARCHAR(64)     NOT NULL,   jid                   VARCHAR(1024)   NOT NULL,   sub                   INTEGER         NOT NULL,   ask                   INTEGER         NOT NULL,   recv                  INTEGER         NOT NULL,   nick                  VARCHAR(255),   CONSTRAINT ofRoster_pk PRIMARY KEY (rosterID) )
+ CREATE INDEX ofRoster_username_idx ON ofRoster (username)
+ CREATE INDEX ofRoster_jid_idx ON ofRoster (jid)
+ CREATE TABLE ofRosterGroups (   rosterID              BIGINT          NOT NULL,   rank                  INTEGER         NOT NULL,   groupName             VARCHAR(255)    NOT NULL,   CONSTRAINT ofRosterGroups_pk PRIMARY KEY (rosterID, rank) )
+ CREATE INDEX ofRosterGroup_rosterid_idx ON ofRosterGroups (rosterID)
+ CREATE TABLE ofVCard (   username              VARCHAR(64)     NOT NULL,   vcard                 LONGVARCHAR     NOT NULL,   CONSTRAINT ofVCard_pk PRIMARY KEY (username) )
+ CREATE TABLE ofGroup (   groupName              VARCHAR(50)     NOT NULL,   description           VARCHAR(255),   CONSTRAINT ofGroup_pk PRIMARY KEY (groupName) )
+ CREATE TABLE ofGroupProp (   groupName             VARCHAR(50)     NOT NULL,   name                  VARCHAR(100)    NOT NULL,   propValue             VARCHAR(4000)   NOT NULL,   CONSTRAINT ofGroupProp_pk PRIMARY KEY (groupName, name) )
+ CREATE TABLE ofGroupUser (   groupName             VARCHAR(50)     NOT NULL,   username              VARCHAR(100)    NOT NULL,   administrator         INTEGER         NOT NULL,   CONSTRAINT ofGroupUser_pk PRIMARY KEY (groupName, username, administrator) )
+ CREATE TABLE ofID (   idType                INTEGER         NOT NULL,   id                    BIGINT          NOT NULL,   CONSTRAINT ofID_pk PRIMARY KEY (idType) )
+ CREATE TABLE ofProperty (   name        VARCHAR(100)  NOT NULL,   propValue   VARCHAR(4000) NOT NULL,   encrypted   INTEGER,   iv          CHAR(24),   CONSTRAINT ofProperty_pk PRIMARY KEY (name) )
+ CREATE TABLE ofVersion (   name  varchar(50)  NOT NULL,   version  INTEGER  NOT NULL,   CONSTRAINT ofVersion_pk PRIMARY KEY (name) )
+ CREATE TABLE ofExtComponentConf (   subdomain             VARCHAR(255)    NOT NULL,   wildcard              INTEGER         NOT NULL,   secret                VARCHAR(255),   permission            VARCHAR(10)     NOT NULL,   CONSTRAINT ofExtComponentConf_pk PRIMARY KEY (subdomain) )
+ CREATE TABLE ofRemoteServerConf (   xmppDomain            VARCHAR(255)    NOT NULL,   remotePort            INTEGER,   permission            VARCHAR(10)     NOT NULL,   CONSTRAINT ofRemoteServerConf_pk PRIMARY KEY (xmppDomain) )
+ CREATE TABLE ofPrivacyList (   username              VARCHAR(64)     NOT NULL,   name                  VARCHAR(100)    NOT NULL,   isDefault             INTEGER         NOT NULL,   list                  LONGVARCHAR     NOT NULL,   CONSTRAINT ofPrivacyList_pk PRIMARY KEY (username, name) )
+ CREATE INDEX ofPrivacyList_default_idx ON ofPrivacyList (username, isDefault)
+ CREATE TABLE ofSASLAuthorized (   username        VARCHAR(64)      NOT NULL,   principal       VARCHAR(4000)    NOT NULL,   CONSTRAINT ofSASLAuthorized_pk PRIMARY KEY (username, principal) )
+ CREATE TABLE ofSecurityAuditLog (   msgID                 BIGINT          NOT NULL,   username              VARCHAR(64)     NOT NULL,   entryStamp            BIGINT          NOT NULL,   summary               VARCHAR(255)    NOT NULL,   node                  VARCHAR(255)    NOT NULL,   details               LONGVARCHAR,   CONSTRAINT ofSecurityAuditLog_pk PRIMARY KEY (msgID) )
+ CREATE INDEX ofSecurityAuditLog_tstamp_idx ON ofSecurityAuditLog (entryStamp)
+ CREATE INDEX ofSecurityAuditLog_uname_idx ON ofSecurityAuditLog (username)
+ CREATE TABLE ofMucService (   serviceID           BIGINT        NOT NULL,   subdomain           VARCHAR(255)  NOT NULL,   description         VARCHAR(255),   isHidden            INTEGER       NOT NULL,   CONSTRAINT ofMucService_pk PRIMARY KEY (subdomain) )
+ CREATE INDEX ofMucService_serviceid_idx ON ofMucService(serviceID)
+ CREATE TABLE ofMucServiceProp (   serviceID           BIGINT        NOT NULL,   name                VARCHAR(100)  NOT NULL,   propValue           VARCHAR(4000) NOT NULL,   CONSTRAINT ofMucServiceProp_pk PRIMARY KEY (serviceID, name) )
+ CREATE TABLE ofMucRoom (   serviceID           BIGINT        NOT NULL,   roomID              BIGINT        NOT NULL,   creationDate        CHAR(15)      NOT NULL,   modificationDate    CHAR(15)      NOT NULL,   name                VARCHAR(50)   NOT NULL,   naturalName         VARCHAR(255)  NOT NULL,   description         VARCHAR(255),   lockedDate          CHAR(15)      NOT NULL,   emptyDate           CHAR(15)      NULL,   canChangeSubject    INTEGER       NOT NULL,   maxUsers            INTEGER       NOT NULL,   publicRoom          INTEGER       NOT NULL,   moderated           INTEGER       NOT NULL,   membersOnly         INTEGER       NOT NULL,   canInvite           INTEGER       NOT NULL,   roomPassword        VARCHAR(50)   NULL,   canDiscoverJID      INTEGER       NOT NULL,   logEnabled          INTEGER       NOT NULL,   subject             VARCHAR(100)  NULL,   rolesToBroadcast    INTEGER       NOT NULL,   useReservedNick     INTEGER       NOT NULL,   canChangeNick       INTEGER       NOT NULL,   canRegister         INTEGER       NOT NULL,   allowpm             INTEGER       NULL,   CONSTRAINT ofMucRoom_pk PRIMARY KEY (serviceID, name) )
+ CREATE INDEX ofMucRoom_roomid_idx ON ofMucRoom (roomID)
+ CREATE INDEX ofMucRoom_serviceid_idx ON ofMucRoom (serviceID)
+ CREATE TABLE ofMucRoomProp (   roomID                BIGINT          NOT NULL,   name                  VARCHAR(100)    NOT NULL,   propValue             VARCHAR(4000)   NOT NULL,   CONSTRAINT ofMucRoomProp_pk PRIMARY KEY (roomID, name) )
+ CREATE TABLE ofMucAffiliation (   roomID              BIGINT        NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   affiliation         INTEGER       NOT NULL,   CONSTRAINT ofMucAffiliation_pk PRIMARY KEY (roomID, jid) )
+ CREATE TABLE ofMucMember (   roomID              BIGINT        NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   nickname            VARCHAR(255)  NULL,   firstName           VARCHAR(100)  NULL,   lastName            VARCHAR(100)  NULL,   url                 VARCHAR(100)  NULL,   email               VARCHAR(100)  NULL,   faqentry            VARCHAR(100)  NULL,   CONSTRAINT ofMucMember_pk PRIMARY KEY (roomID, jid) )
+ CREATE TABLE ofMucConversationLog (   roomID              BIGINT        NOT NULL,   messageID         BIGINT      NOT NULL,   sender              VARCHAR(1024) NOT NULL,   nickname            VARCHAR(255)  NULL,   logTime             CHAR(15)      NOT NULL,   subject             VARCHAR(255)  NULL,   body                LONGVARCHAR   NULL,   stanza             LONGVARCHAR    NULL )
+ CREATE INDEX ofMucConversationLog_time_idx ON ofMucConversationLog (logTime)
+ CREATE INDEX ofMucConversationLog_msg_id ON ofMucConversationLog (messageID)
+ CREATE TABLE ofPubsubNode (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   leaf                INTEGER       NOT NULL,   creationDate        CHAR(15)      NOT NULL,   modificationDate    CHAR(15)      NOT NULL,   parent              VARCHAR(100)  NULL,   deliverPayloads     INTEGER       NOT NULL,   maxPayloadSize      INTEGER       NULL,   persistItems        INTEGER       NULL,   maxItems            INTEGER       NULL,   notifyConfigChanges INTEGER       NOT NULL,   notifyDelete        INTEGER       NOT NULL,   notifyRetract       INTEGER       NOT NULL,   presenceBased       INTEGER       NOT NULL,   sendItemSubscribe   INTEGER       NOT NULL,   publisherModel      VARCHAR(15)   NOT NULL,   subscriptionEnabled INTEGER       NOT NULL,   configSubscription  INTEGER       NOT NULL,   accessModel         VARCHAR(10)   NOT NULL,   payloadType         VARCHAR(100)  NULL,   bodyXSLT            VARCHAR(100)  NULL,   dataformXSLT        VARCHAR(100)  NULL,   creator             VARCHAR(1024) NOT NULL,   description         VARCHAR(255)  NULL,   language            VARCHAR(255)  NULL,   name                VARCHAR(50)   NULL,   replyPolicy         VARCHAR(15)   NULL,   associationPolicy   VARCHAR(15)   NULL,   maxLeafNodes        INTEGER       NULL,   CONSTRAINT ofPubsubNode_pk PRIMARY KEY (serviceID, nodeID) )
+ CREATE TABLE ofPubsubNodeJIDs (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   associationType     VARCHAR(20)   NOT NULL,   CONSTRAINT ofPubsubNodeJIDs_pk PRIMARY KEY (serviceID, nodeID, jid) )
+ CREATE TABLE ofPubsubNodeGroups (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   rosterGroup         VARCHAR(100)  NOT NULL )
+ CREATE INDEX ofPubsubNodeGroups_idx ON ofPubsubNodeGroups (serviceID, nodeID)
+ CREATE TABLE ofPubsubAffiliation (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   affiliation         VARCHAR(10)   NOT NULL,   CONSTRAINT ofPubsubAffiliation_pk PRIMARY KEY (serviceID, nodeID, jid) )
+ CREATE TABLE ofPubsubItem (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   id                  VARCHAR(100)  NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   creationDate        CHAR(15)      NOT NULL,   payload             VARCHAR(4000) NULL,   CONSTRAINT ofPubsubItem_pk PRIMARY KEY (serviceID, nodeID, id) )
+ CREATE TABLE ofPubsubSubscription (   serviceID           VARCHAR(100)  NOT NULL,   nodeID              VARCHAR(100)  NOT NULL,   id                  VARCHAR(100)  NOT NULL,   jid                 VARCHAR(1024) NOT NULL,   owner               VARCHAR(1024) NOT NULL,   state               VARCHAR(15)   NOT NULL,   deliver             INTEGER       NOT NULL,   digest              INTEGER       NOT NULL,   digest_frequency    INTEGER       NOT NULL,   expire              CHAR(15)      NULL,   includeBody         INTEGER       NOT NULL,   showValues          VARCHAR(30)   NOT NULL,   subscriptionType    VARCHAR(10)   NOT NULL,   subscriptionDepth   INTEGER       NOT NULL,   keyword             VARCHAR(200)  NULL,   CONSTRAINT ofPubsubSubscription_pk PRIMARY KEY (serviceID, nodeID, id) )
+ CREATE TABLE ofPubsubDefaultConf (   serviceID           VARCHAR(100)  NOT NULL,   leaf                INTEGER       NOT NULL,   deliverPayloads     INTEGER       NOT NULL,   maxPayloadSize      INTEGER       NOT NULL,   persistItems        INTEGER       NOT NULL,   maxItems            INTEGER       NOT NULL,   notifyConfigChanges INTEGER       NOT NULL,   notifyDelete        INTEGER       NOT NULL,   notifyRetract       INTEGER       NOT NULL,   presenceBased       INTEGER       NOT NULL,   sendItemSubscribe   INTEGER       NOT NULL,   publisherModel      VARCHAR(15)   NOT NULL,   subscriptionEnabled INTEGER       NOT NULL,   accessModel         VARCHAR(10)   NOT NULL,   language            VARCHAR(255)  NULL,   replyPolicy         VARCHAR(15)   NULL,   associationPolicy   VARCHAR(15)   NOT NULL,   maxLeafNodes        INTEGER       NOT NULL,   CONSTRAINT ofPubsubDefaultConf_pk PRIMARY KEY (serviceID, leaf) )
+INSERT INTO OFID VALUES(18,1)
+COMMIT
+INSERT INTO OFID VALUES(19,1)
+COMMIT
+INSERT INTO OFID VALUES(23,1)
+COMMIT
+INSERT INTO OFID VALUES(26,2)
+COMMIT
+INSERT INTO OFID VALUES(27,1)
+COMMIT
+INSERT INTO OFVERSION VALUES('openfire',30)
+COMMIT
+INSERT INTO OFUSER VALUES('admin',NULL,NULL,NULL,NULL,'admin',NULL,'Administrator','admin@example.com','0','0')
+COMMIT
+INSERT INTO OFMUCSERVICE VALUES(1,'conference',NULL,0)
+COMMIT
+ SET FILES LOG SIZE 20
+ SET FILES WRITE DELAY 1000 MILLIS
+INSERT INTO OFPROPERTY VALUES('passwordKey','WExPEpN00iQwHRC',0,NULL)
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='admin'
+INSERT INTO OFUSER VALUES('admin','IlFJ9ZE1BdKk5xFPfdWW4Ju/f78=','VG7YAcWA/2pnoxmdkoX39+TLRbI=','BrUZq812lBXLtvSxOxaSzTGHJG9k96uN',4096,NULL,'88821083dac412836353c186f38479d2','Administrator','admin@example.com','0','0')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='admin'
+INSERT INTO OFUSER VALUES('admin','IlFJ9ZE1BdKk5xFPfdWW4Ju/f78=','VG7YAcWA/2pnoxmdkoX39+TLRbI=','BrUZq812lBXLtvSxOxaSzTGHJG9k96uN',4096,NULL,'88821083dac412836353c186f38479d2','Administrator','oriol@carter.ofa.itb','0','0')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='admin'
+INSERT INTO OFUSER VALUES('admin','IlFJ9ZE1BdKk5xFPfdWW4Ju/f78=','VG7YAcWA/2pnoxmdkoX39+TLRbI=','BrUZq812lBXLtvSxOxaSzTGHJG9k96uN',4096,NULL,'88821083dac412836353c186f38479d2','Administrator','oriol@carter.ofa.itb','001622506341977','0')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='admin'
+INSERT INTO OFUSER VALUES('admin','IlFJ9ZE1BdKk5xFPfdWW4Ju/f78=','VG7YAcWA/2pnoxmdkoX39+TLRbI=','BrUZq812lBXLtvSxOxaSzTGHJG9k96uN',4096,NULL,'88821083dac412836353c186f38479d2','Administrator','oriol@carter.ofa.itb','001622506341977','0')
+COMMIT
+INSERT INTO OFPROPERTY VALUES('xmpp.socket.ssl.active','true',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.admin.className','org.jivesoftware.openfire.admin.DefaultAdminProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('xmpp.domain','guasap.ofa.itb',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('xmpp.auth.anonymous','false',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.auth.className','org.jivesoftware.openfire.auth.DefaultAuthProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.lockout.className','org.jivesoftware.openfire.lockout.DefaultLockOutProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.group.className','org.jivesoftware.openfire.group.DefaultGroupProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.vcard.className','org.jivesoftware.openfire.vcard.DefaultVCardProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.securityAudit.className','org.jivesoftware.openfire.security.DefaultSecurityAuditProvider',0,NULL)
+COMMIT
+INSERT INTO OFPROPERTY VALUES('provider.user.className','org.jivesoftware.openfire.user.DefaultUserProvider',0,NULL)
+COMMIT
+INSERT INTO OFPUBSUBDEFAULTCONF VALUES('pubsub',1,1,5120,0,1,1,1,1,0,1,'publishers',1,'open','English',NULL,'all',-1)
+COMMIT
+INSERT INTO OFPUBSUBDEFAULTCONF VALUES('pubsub',0,0,0,0,0,1,1,1,0,0,'publishers',1,'open','English',NULL,'all',-1)
+COMMIT
+INSERT INTO OFPUBSUBNODE VALUES('pubsub','',0,'001622506344321','001622506344321',NULL,0,0,0,0,1,1,1,0,0,'publishers',1,0,'open','','','','guasap.ofa.itb','','English','',NULL,'all',-1)
+COMMIT
+INSERT INTO OFPUBSUBAFFILIATION VALUES('pubsub','','guasap.ofa.itb','owner')
+COMMIT
+INSERT INTO OFID VALUES(25,1)
+DELETE FROM OFID WHERE IDTYPE=25
+INSERT INTO OFID VALUES(25,2)
+COMMIT
+INSERT INTO OFSECURITYAUDITLOG VALUES(1,'admin',1622506348597,'Successful admin console login attempt','guasap.ofa.itb','The user logged in successfully to the admin console from address 10.77.0.2. ')
+COMMIT
+DELETE FROM OFID WHERE IDTYPE=19
+INSERT INTO OFID VALUES(19,6)
+COMMIT
+INSERT INTO OFOFFLINE VALUES('admin',1,'001622506370460',131,'<message from="guasap.ofa.itb" to="admin@guasap.ofa.itb"><body>A server or plugin update was found: Openfire 4.6.3</body></message>')
+COMMIT
+INSERT INTO OFPROPERTY VALUES('update.lastCheck','1622506370689',0,NULL)
+COMMIT
+INSERT INTO OFOFFLINE VALUES('admin',2,'001622506379579',131,'<message from="guasap.ofa.itb" to="admin@guasap.ofa.itb"><body>A server or plugin update was found: Openfire 4.6.3</body></message>')
+COMMIT
+DELETE FROM OFPROPERTY WHERE NAME='update.lastCheck'
+INSERT INTO OFPROPERTY VALUES('update.lastCheck','1622506379800',0,NULL)
+COMMIT
+INSERT INTO OFUSER VALUES('alumne',NULL,NULL,NULL,NULL,NULL,NULL,'alumne','alumne@a.sdasda','001622506536657','001622506536657')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='alumne'
+INSERT INTO OFUSER VALUES('alumne','umgb2zM39KCIK+HODnJBl5dd5Bk=','u5CSYSZqemsuW2hPqO239OJPlr4=','p4vcqUx9T1Z11T7wYLXHTDcNyqkAgb8t',4096,NULL,'91153a13876cf3c6ef7f6f52a60c6e45','alumne','alumne@a.sdasda','001622506536657','001622506536657')
+COMMIT
+DELETE FROM OFID WHERE IDTYPE=25
+INSERT INTO OFID VALUES(25,3)
+COMMIT
+INSERT INTO OFSECURITYAUDITLOG VALUES(2,'admin',1622506536711,'created new user alumne','guasap.ofa.itb','name = alumne, email = alumne@a.sdasda, admin = false')
+COMMIT
+INSERT INTO OFUSER VALUES('a',NULL,NULL,NULL,NULL,NULL,NULL,'a','a@asdasa.sda','001622506547067','001622506547067')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='a'
+INSERT INTO OFUSER VALUES('a','k1HZRR7GrWm2aEK+bxWHLabQ5bU=','Q5RfOxRz+pqd1180zjjwgdCxxyM=','m7zFW74wnpBoajwwtAr6r8txLO1nU/Kt',4096,NULL,'0000ca54059895dbdddd0e4f2de62ab7','a','a@asdasa.sda','001622506547067','001622506547067')
+COMMIT
+DELETE FROM OFID WHERE IDTYPE=25
+INSERT INTO OFID VALUES(25,4)
+COMMIT
+INSERT INTO OFSECURITYAUDITLOG VALUES(3,'admin',1622506547106,'created new user a','guasap.ofa.itb','name = a, email = a@asdasa.sda, admin = false')
+COMMIT
+INSERT INTO OFUSER VALUES('profe',NULL,NULL,NULL,NULL,NULL,NULL,'a','profe@ca.dasdas','001622506584575','001622506584575')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='profe'
+INSERT INTO OFUSER VALUES('profe','2b9xFjI8mQgwevVJ+4cTJaMD9iE=','7UIwwiIXZMeFsY96G8+038Trkog=','RB5gWF/ce+3/Ta532pekEI+5aCgm87Dh',4096,NULL,'29a7ae59bd9bb61d1d95046ce2d6647c33241943da3ceaa68f814ba71cce582f','a','profe@ca.dasdas','001622506584575','001622506584575')
+COMMIT
+DELETE FROM OFID WHERE IDTYPE=25
+INSERT INTO OFID VALUES(25,5)
+COMMIT
+INSERT INTO OFSECURITYAUDITLOG VALUES(4,'admin',1622506584585,'created new user profe','guasap.ofa.itb','name = a, email = profe@ca.dasdas, admin = false')
+COMMIT
+INSERT INTO OFUSER VALUES('b',NULL,NULL,NULL,NULL,NULL,NULL,'b','b@asdasda.sadas','001622506603145','001622506603145')
+COMMIT
+DELETE FROM OFUSER WHERE USERNAME='b'
+INSERT INTO OFUSER VALUES('b','x+GtfmltX+zTKlOa7QgpISc4gxc=','M1eT+EZPvM9NxoGDFjC9p9w+Xdw=','yY+sOa6ff7ez2YjHglye4u/Nywdu53yP',4096,NULL,'9d5f516a473db5e9888ec8c96ad86c97','b','b@asdasda.sadas','001622506603145','001622506603145')
+COMMIT
+DELETE FROM OFID WHERE IDTYPE=25
+INSERT INTO OFID VALUES(25,6)
+COMMIT
+INSERT INTO OFSECURITYAUDITLOG VALUES(5,'admin',1622506603157,'created new user b','guasap.ofa.itb','name = b, email = b@asdasda.sadas, admin = false')
+COMMIT
