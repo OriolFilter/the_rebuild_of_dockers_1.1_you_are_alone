@@ -30,6 +30,9 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 #docker pull nginx;
 
 cd ./$FILESFOLDER/;
+# Eliminem els fitxers .holder ja que s'han copiat les carpetes.
+
+rm $(find -name '.holder')
 printf '# Disable default dns\n';
 sudo systemctl stop systemd-resolved;
 sudo systemctl disable systemd-resolved;

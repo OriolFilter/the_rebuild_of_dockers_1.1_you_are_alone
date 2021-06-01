@@ -12,10 +12,11 @@ services:
       ROOT_PASSWORD: mypassword
       HOSTNAME: carter.ofa.itb
       DOMAINNAME: ofa.itb
-      USERS: profe:chequejant,alumne:a,a:a,b:b
+      USERS: alumne:a,a:a,b:b,profe:chequejant
     volumes:
       - "./stack/postfix/mail:/etc/postfix/mail:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.log:/var/log/mail.log:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.err:/var/log/mail.err:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/spamassasin:/var/log/spamassasin:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/supervisor:/var/log/supervisor:rw"
 networks:
