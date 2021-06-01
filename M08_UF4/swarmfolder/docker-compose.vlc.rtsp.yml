@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  vlc:
+    image: gersilex/cvlc
+    ports:
+      - target: 8123
+        published: 8123
+        protocol: tcp
+        mode: host
+    volumes:
+      - "${EMERGENCYVIDEO:-./stack/streaming_files/videoplayback.mp4}:/data/file.mp4:ro"
+
+    entrypoint: cvlc /data/file.mp4 --sout '#transcode{vcodec=MJPG,acodec=mpga,venc=ffmpeg{strict=1}}:rtp{mux=ts,sdp=rtsp://:8123,name="${MESSAGE:-Media Stream}"}' --no-disable-screensaver --sout-keep --loop --repeat
+
