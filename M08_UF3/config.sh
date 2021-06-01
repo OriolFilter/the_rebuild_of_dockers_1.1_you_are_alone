@@ -3,7 +3,7 @@ SCRIPTFOLDER="$(dirname $0)"
 SSH="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o loglevel=ERROR -i CLAU"
 SSHP="2222"
 NAMEVM="MAINS-OFA"
-USER="sjo"
+USERNAME="sjo"
 STACK="stack"
 FILESFOLDER="swarmfolder"
 
@@ -13,7 +13,7 @@ IPL="10.10.6.1"
 
 # Copiar files config
 
-scp -P $SSHP $SSH  -r $SCRIPTFOLDER/$FILESFOLDER/ $USER@localhost:~
+scp -P $SSHP $SSH  -r $SCRIPTFOLDER/$FILESFOLDER/ $USERNAME@localhost:~
 
 ### Command start
 
@@ -31,8 +31,8 @@ docker pull nginx;
 
 cd ./$FILESFOLDER/;
 # Eliminem els fitxers .holder ja que s'han copiat les carpetes.
-
-rm "$(find -name '.holder')";
+echo Removing .holder files;
+rm -v \$(find -name '.holder');
 printf '# Disable default dns\n';
 sudo systemctl stop systemd-resolved;
 sudo systemctl disable systemd-resolved;
@@ -64,4 +64,4 @@ Preferences -> Advanced -> Certificates -> Validation -> Uncheck Use the Online 
 
 ### Command end
 
-ssh -p $SSHP $SSH -t $USER@localhost "bash -c $CMD"
+ssh -p $SSHP $SSH -t $USERNAME@localhost "bash -c $CMD"
