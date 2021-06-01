@@ -29,6 +29,7 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 #docker pull atmoz/sftp;
 #docker pull nginx;
 #docker pull gersilex/cvlc;
+#docker pull hurlenko/motioneye;
 
 cd ./$FILESFOLDER/;
 
