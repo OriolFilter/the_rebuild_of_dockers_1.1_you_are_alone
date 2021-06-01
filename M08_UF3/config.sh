@@ -17,11 +17,17 @@ scp -P $SSHP $SSH  -r $SCRIPTFOLDER/$FILESFOLDER/ $USER@localhost:~
 
 ### Command start
 
-CMD="echo 'zzzzzzzzzz';
+CMD="echo '.';
 printf '# Transferint e iniciant lscript de configuracio\n';
-echo 'Pulling DNS and docker image';
-docker pull sameersbn/bind;
-docker pull networkboot/dhcpd;
+
+
+#echo 'Pulling required images to speed up a little';
+#docker pull sameersbn/bind;
+#docker pull networkboot/dhcpd;
+#docker pull classcat/postfix-dovecot;
+#docker pull quantumobject/docker-openfire;
+#docker pull atmoz/sftp;
+#docker pull nginx;
 
 cd ./$FILESFOLDER/;
 printf '# Disable default dns\n';
@@ -29,10 +35,9 @@ sudo systemctl stop systemd-resolved;
 sudo systemctl disable systemd-resolved;
 
 
+# Deploy first stack, which contains the core services: DHCP & DNS;
 docker stack deploy --compose-file base_services.yml $STACK;
 echo docker stack deploy --compose-file base_services.yml $STACK;
-watch docker stack ps $STACK;
-
 
 printf \"updating resolv\n\";
 printf \"domain $DOMAIN
@@ -41,15 +46,14 @@ nameserver $IPL\n
 nameserver 8.8.8.8
 \" | sudo tee /etc/resolv.conf;
 
-sudo apt-get update && sudo apt-get install -y git curl python3;
-sudo curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose;
-sudo chmod +x /usr/local/bin/docker-compose;
 
+# Deploy the rest of services;
+docker stack deploy -c docker-compose.sftp.yml sftp;
+docker stack deploy -c docker-compose.web.yml web;
 docker stack deploy -c docker-compose.mail.yml mail;
 docker stack deploy -c docker-compose.openfire.yml openfire;
-docker stack deploy -c docker-compose.nginx_sftp.yml nginx_sftp;
 
-watch docker container ls
+watch docker service ls
 
 echo '# INFO MESSAGE, COMMON ISSUE (thunderbird)
 To check if OCSP is the cause of the trouble disable it temporarily and retry to connect to your server.

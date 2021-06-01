@@ -14,7 +14,10 @@ services:
       DOMAINNAME: ofa.itb
       USERS: profe:chequejant,alumne:a,a:a,b:b
     volumes:
-      - ./stack/postfix/mail:/etc/postfix/mail
+      - "./stack/postfix/mail:/etc/postfix/mail:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.log:/var/log/mail.log:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/spamassasin:/var/log/spamassasin:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/supervisor:/var/log/supervisor:rw"
 networks:
   outside:
     external:
