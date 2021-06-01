@@ -40,7 +40,6 @@ sudo systemctl disable systemd-resolved;
 
 # Deploy first stack, which contains the core services: DHCP & DNS;
 docker stack deploy --compose-file base_services.yml $STACK;
-echo docker stack deploy --compose-file base_services.yml $STACK;
 
 printf \"updating resolv\n\";
 printf \"domain $DOMAIN

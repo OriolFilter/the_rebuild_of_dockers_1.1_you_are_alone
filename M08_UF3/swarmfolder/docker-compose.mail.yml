@@ -14,11 +14,17 @@ services:
       DOMAINNAME: ofa.itb
       USERS: alumne:a,a:a,b:b,profe:chequejant
     volumes:
-      - "./stack/postfix/mail:/etc/postfix/mail:rw"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/emails:/var/mail:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.log:/var/log/mail.log:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.err:/var/log/mail.err:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/spamassasin:/var/log/spamassasin:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/supervisor:/var/log/supervisor:rw"
+    command: ["/bin/sh", "-c", "/opt/cc-init.sh; /usr/sbin/addgroup  alumne mail && \
+                   /usr/sbin/addgroup profe mail && \
+                   /usr/sbin/addgroup a mail && \
+                   /usr/sbin/addgroup b mail && \
+                   /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"]
+
 networks:
   outside:
     external:

@@ -9,6 +9,7 @@
 
 SCRIPTFOLDER="$(dirname $0)"
 echo $SCRIPTFOLDER
+cd $SCRIPTFOLDER
 PART2SCRIPT="config.sh"
 
 SSHFILE="CLAU"
@@ -18,7 +19,7 @@ SSH="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o loglevel=ERR
 NAMEVM="MAINS-OFA" #Name Virtual Machine
 RAMM=2048 # 2GB 
 #VMF="$1" # Virtual Machine File
-VMF="${SCRIPTFOLDER}/../UbuSrvDockerNFS.vdi" # Virtual Machine File
+VMF="../UbuSrvDockerNFS.vdi" # Virtual Machine File
 echo $VMF
 # Maquina
 
@@ -42,9 +43,9 @@ printf "~~~~~~\ :$NAMEVM:
 " 
 # ~~~~~~\ $DGVM: Gateway (DISABLED)
 
-### Executa VDEServer SENSE el DPIPE
+### Executa VDEServer AMB el DPIPE
 
-./${SCRIPTFOLDER}/VDEServer.bash 1 & disown
+./VDEServer.bash 1
 
 
 ## Neteja
@@ -210,5 +211,5 @@ ssh -p $SSHP $SSH -t $USER@localhost "docker swarm init --advertise-addr $IPL --
 
 # Executar config.sh
 
-./$SCRIPTFOLDER/$PART2SCRIPT
+./$PART2SCRIPT
 
