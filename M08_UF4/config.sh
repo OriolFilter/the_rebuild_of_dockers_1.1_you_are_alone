@@ -29,6 +29,7 @@ docker pull atmoz/sftp;
 docker pull nginx;
 #docker pull gersilex/cvlc;
 docker pull \"ccrisan/motioneye:master-amd64\";
+docker pull apache/openmeetings;
 
 cd ./$FILESFOLDER/;
 
