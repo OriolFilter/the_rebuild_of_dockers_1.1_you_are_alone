@@ -22,4 +22,5 @@ services:
       - "./stack/shared_dir:/home/a/shared_dir/:rw"
       - "./stack/shared_dir:/home/b/shared_dir/:rw"
       - "./stack/shared_dir:/home/profe/shared_dir/:rw"
-      - "./stack/nginx/www/web11/html/privatefolder/logs/motioneye_backups:/home/motioneye_backups/motioneye_backups/:rw"
+
+      - "./stack/nginx/www/web11/html/privatefolder/logs/motioneye/backups:/home/motioneye_backups/motioneye_backups/:rw"

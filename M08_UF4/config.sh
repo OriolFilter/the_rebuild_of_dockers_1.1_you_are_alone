@@ -28,7 +28,7 @@ docker pull classcat/postfix-dovecot;
 docker pull atmoz/sftp;
 docker pull nginx;
 #docker pull gersilex/cvlc;
-docker pull hurlenko/motioneye:amd64;
+docker pull \"ccrisan/motioneye:master-amd64\";
 
 cd ./$FILESFOLDER/;
 
