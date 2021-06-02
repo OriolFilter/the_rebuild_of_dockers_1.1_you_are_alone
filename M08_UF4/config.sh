@@ -4,7 +4,6 @@ SSH="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o loglevel=ERR
 SSHP="2222"
 NAMEVM="MAINS-OFA"
 USERNAME="sjo"
-STACK="stack"
 FILESFOLDER="swarmfolder"
 
 
@@ -22,14 +21,14 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 
 
 #echo 'Pulling required images to speed up a little';
-#docker pull sameersbn/bind;
-#docker pull networkboot/dhcpd;
-#docker pull classcat/postfix-dovecot;
+docker pull sameersbn/bind;
+docker pull networkboot/dhcpd;
+docker pull classcat/postfix-dovecot;
 #docker pull quantumobject/docker-openfire;
-#docker pull atmoz/sftp;
-#docker pull nginx;
+docker pull atmoz/sftp;
+docker pull nginx;
 #docker pull gersilex/cvlc;
-#docker pull hurlenko/motioneye;
+docker pull hurlenko/motioneye:amd64;
 
 cd ./$FILESFOLDER/;
 
@@ -42,7 +41,7 @@ sudo systemctl disable systemd-resolved;
 
 
 # Deploy first stack, which contains the core services: DHCP & DNS;
-#docker stack deploy --compose-file base_services.yml $STACK;
+docker stack deploy --compose-file base_services.yml core;
 
 printf \"updating resolv\n\";
 printf \"domain $DOMAIN
@@ -53,10 +52,11 @@ nameserver 8.8.8.8
 
 
 ## Deploy the rest of services;
-#docker stack deploy -c docker-compose.sftp.yml sftp;
-#docker stack deploy -c docker-compose.web.yml web;
-#docker stack deploy -c docker-compose.mail.yml mail;
+docker stack deploy -c docker-compose.sftp.yml sftp;
+docker stack deploy -c docker-compose.web.yml web;
+docker stack deploy -c docker-compose.mail.yml mail;
 #docker stack deploy -c docker-compose.openfire.yml openfire;
+docker stack deploy -c docker-compose.motioneye.yml motioneye;
 
 watch docker service ls;
 "

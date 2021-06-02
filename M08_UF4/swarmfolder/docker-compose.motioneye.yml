@@ -1,15 +1,17 @@
 version: '3.7'
 services:
-  vlc:
-    image: hurlenko/motioneye
+  motioneye:
+    image: "ccrisan/motioneye:master-amd64"
     ports:
-      - target: 80
+      - target: 8765
         published: 8765
         protocol: tcp
         mode: host
+      - target: 8799
+        published: 8799
+        protocol: tcp
+        mode: host
     volumes:
-      - ./stack/motioneye/config:/var/lib/motioneye:rw" # R/W needed for motioneye to update configurations
-      - ./stack/motioneye/media:/etc/motioneye:rw" # Video & Images
-#      - ?:/var/run/motion # PIDs
-
-    entrypoint: cvlc /data/file.mp4 --sout '#transcode{vcodec=MJPG,venc=ffmpeg{strict=1}}:standard{access=http{mime=multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8123/}' --no-disable-screensaver --sout-keep --loop
+      - "./stack/motioneye/config:/etc/motioneye:rw" # Motioneye config
+      - "./stack/motioneye/camera:/var/lib/motioneye:rw" # Camera config
+      - "./stack/nginx/www/web11/html/privatefolder/logs/motioneye/motion.log:/var/log/motion.log:rw" # Log

@@ -12,7 +12,7 @@ services:
       ROOT_PASSWORD: mypassword
       HOSTNAME: carter.ofa.itb
       DOMAINNAME: ofa.itb
-      USERS: alumne:a,a:a,b:b,profe:chequejant
+      USERS: alumne:a,a:a,b:b,profe:chequejant,motioneye_backups:a
     volumes:
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/emails:/var/mail:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/postfix/mail.log:/var/log/mail.log:rw"
@@ -23,14 +23,15 @@ services:
                    /usr/sbin/addgroup profe mail && \
                    /usr/sbin/addgroup a mail && \
                    /usr/sbin/addgroup b mail && \
-                   /usr/bin/touch /var/mail/a /var/mail/b /var/mail/alumne /var/mail/profe && \
+                   /usr/sbin/addgroup motioneye_backups mail && \
+                   /usr/bin/touch /var/mail/a /var/mail/b /var/mail/alumne /var/mail/profe /var/mail/motioneye_backups && \
                    /bin/chmod 777 /var/log/mail.log /var/log/mail.err /var/mail -R && \
                    /bin/chown a:mail /var/mail/a && \
                    /bin/chown b:mail /var/mail/b && \
                    /bin/chown alumne:mail /var/mail/alumne && \
                    /bin/chown profe:mail /var/mail/profe && \
+                   /bin/chown motioneye_backups:mail /var/mail/motioneye_backups && \
                    /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"]
-
 networks:
   outside:
     external:
