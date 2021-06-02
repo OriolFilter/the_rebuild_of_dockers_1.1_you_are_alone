@@ -16,8 +16,8 @@ localhost       IN	A    127.0.0.1
 router          IN	A    10.10.6.1
 
 bdd             IN	A    10.10.6.2
-equ1            IN	A    10.10.6.101
-equ2            IN	A    10.10.6.102
+eq1            IN	A    10.10.6.101
+eq2            IN	A    10.10.6.102
 
 checkprofe	IN	CNAME router.OFA.itb.
 srv	        IN	CNAME router.OFA.itb.

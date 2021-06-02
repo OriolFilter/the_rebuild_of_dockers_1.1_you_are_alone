@@ -23,12 +23,13 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 #echo 'Pulling required images to speed up a little';
 docker pull sameersbn/bind;
 docker pull networkboot/dhcpd;
-docker pull classcat/postfix-dovecot;
-#docker pull quantumobject/docker-openfire;
-docker pull atmoz/sftp;
 docker pull nginx;
-#docker pull gersilex/cvlc;
+docker pull atmoz/sftp;
+docker pull classcat/postfix-dovecot;
+docker pull quantumobject/docker-openfire;
+docker pull gersilex/cvlc;
 docker pull \"ccrisan/motioneye:master-amd64\";
+docker pull \"apache/openmeetings:6.0.0\";
 docker pull apache/openmeetings;
 
 cd ./$FILESFOLDER/;
@@ -56,8 +57,9 @@ nameserver 8.8.8.8
 docker stack deploy -c docker-compose.sftp.yml sftp;
 docker stack deploy -c docker-compose.web.yml web;
 docker stack deploy -c docker-compose.mail.yml mail;
-#docker stack deploy -c docker-compose.openfire.yml openfire;
+docker stack deploy -c docker-compose.openfire.yml openfire;
 docker stack deploy -c docker-compose.motioneye.yml motioneye;
+docker stack deploy -c docker-compose.openmeetings.yml motioneye;
 
 watch docker service ls;
 "

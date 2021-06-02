@@ -12,6 +12,8 @@ sleep 1
 ip a
 ip r
 sleep 1
+nmcli dev show enp0s3 | grep IP4
+sleep 1
 wget www.itb.cat
 sleep 1
 firefox https://www.marca.com/
