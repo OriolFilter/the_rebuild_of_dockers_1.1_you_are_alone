@@ -79,6 +79,7 @@ vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgener
 
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
 
+
 # Iniciar maquina virtual sense finestra (headless)
 
 VBoxManage startvm "$NAMEVM" --type headless

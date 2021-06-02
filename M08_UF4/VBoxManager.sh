@@ -2,10 +2,8 @@
 
 # Script VirtualBox
 #
-#
 # Configuració de variables
 #
-
 
 SCRIPTFOLDER="$(dirname $0)"
 echo $SCRIPTFOLDER
@@ -73,11 +71,20 @@ VBoxManage storageattach "$NAMEVM" --storagectl jgdiscos --port 0 --device 0 --t
 
 
 vbTUNEJOS="--memory $RAMM --vram 32 --pae on --hwvirtex on --boot1 disk --audio none --accelerate3d on --usb off " # Variable Holder 1
-#vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --intnet2 CONFINAMENT --nicproperty2 network=/tmp/serverSwitch[9]"  # Variable Holder 2
-vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgenericdrv2 VDE --nicproperty2 network=/tmp/serverSwitch[9]"  # Variable Holder 2
-#vbNICS="--nic1 nat --nictype1 virtio"  # Variable Holder 2
 
+vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgenericdrv2 VDE --nicproperty2 network=/tmp/serverSwitch[9]"
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "web,tcp,,80,,80" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "sftp,tcp,,23,,23" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "webS,tcp,,8080,,8080" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailA,tcp,,2022,,2022" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailb,tcp,,25,,25" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailc,tcp,,110,,110" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailc,tcp,,143,,143" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "openeyea,tcp,,8675,,8675" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "openeyeb,tcp,,8999,,8999" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "vlc,tcp,,8123,,8123" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "webS,tcp,,443,,443" # Port forwarding Virtualbox
 
 # Iniciar maquina virtual sense finestra (headless)
 
@@ -105,7 +112,7 @@ FINAL
 # FINAL, no es pot ficar res a la mateixa linea de FINAL per tancar, sinó compta com una linea més i per tant no queda tancat
 
 scp -P $SSHP $SSH  /tmp/cmd $USER@localhost:/home/$USER/cmd  # Ara mateix amb scp estem copiant un fitxer del nostre equip, al equip servidor, utilitzant un usuari del sistema servidor, en aquest cas com volem accedir a una màquina virtual, que està sent hostejada per el nostre sistema, i hem ficat que escolti al port  2222, utilitzarem @localhost com a adreça del sistema servidor, també podria utilitzar-se 127.0.0.1 (sempre que estigui ben configurat el sistema)
-ssh -p $SSHP $SSH -t $USER@localhost bash "/home/$USER/cmd" # Connectant-se al mateix servidor i al mateix usuari d'abans, executarem el fitxer que hem mogut al servidor, amb la comanda creada anteriorment
+ssh -p $SSHP $SSH -t $USER@localhost "bash /home/$USER/cmd" # Connectant-se al mateix servidor i al mateix usuari d'abans, executarem el fitxer que hem mogut al servidor, amb la comanda creada anteriorment
 # NOTA, crec que podem iniciar amb cualsevol usuari, no ens ha demanat crear cap en cap moment
 
 
@@ -167,7 +174,7 @@ ssh -p $SSHP $SSH -t $USER@localhost "$CMD"
 
 cat << "FINAL" > /tmp/cmd
 echo "127.0.0.1 localhost
-127.0.1.1 MAINS-OFA
+127.0.1.1 $hostname
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -177,7 +184,7 @@ FINAL
 # Hem guardat comandes dins del cmd
 
 scp -P $SSHP "$SSH"  /tmp/cmd "$USER@localhost:/home/$USER/cmd" # Movem el fitxer de comandes al servidor
-ssh -p $SSHP "$SSH" -t "$USER@localhost" bash "/home/$USER/cmd" # Executem el fitxer de comandes al servidor
+ssh -p $SSHP "$SSH" -t "$USER@localhost" "bash /home/$USER/cmd" # Executem el fitxer de comandes al servidor
 
 
 
