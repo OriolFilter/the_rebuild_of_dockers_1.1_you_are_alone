@@ -1,11 +1,11 @@
 version: "3.3"
 services:
   samba:
-
     container_name: samba
     image:  dperson/samba
     volumes:
       - "samba_folder:/shared:rw"
+      - "./stack/samba.conf:/conf/samba.conf2:ro"
     ports:
       - target: 139
         published: 139
@@ -17,26 +17,20 @@ services:
         mode: host
     environment:
       TZ: "Europe/Madrid"
-      USER1: "al4;a"
+      USER1: "al1;a"
       USER2: "al2;a"
       USER3: "al3;a"
       USER4: "prof1;a"
       USER5: "prof2;a"
-      SHARE_main: "shared;/shared/;yes;yes;no;;;;Shared samba folder"
       # Professors
-      SHARE_prof1: "prof1;/shared/prof1;yes;no;no;;;;Prof1 folder"
-      SHARE_prof1apunts: "prof1/Apunts;/shared/prof1/apunts;yes;no;no;al1,al2,prof2;;prof1;Prof1 Apunts folder"
+      SHARE_prof1apunts: "prof1/Apunts;/shared/prof1/apunts;yes;no;no;al1,al2,prof2,prof1;prof1;;Prof1 Apunts folder"
       # Prof2
-      SHARE_prof2: "prof2;/shared/prof2;yes;no;no;;;;Prof2 folder"
-      SHARE_prof2apunts: "prof2/Apunts;/shared/prof2/apunts;yes;no;no;al1,al3,prof2;;prof2;Prof2 Apunts folder"
+      SHARE_prof2apunts: "prof2/Apunts;/shared/prof2/apunts;yes;no;no;al1,al3,prof2;prof2;;Prof2 Apunts folder"
       # Alumnes
-      SHARE_al1: "al1;/shared/al1;yes;no;no;al1,prof1,prof2;;;Carpeta de al1"
-      SHARE_al1notes: "al1/Notes;/shared/al1/notes;yes;no;no;al1,prof1,prof2;;al1,prof1,prof2;Carpeta de al1"
+      SHARE_al1notes: "al1/Notes;/shared/al1/notes;yes;no;no;al1,prof1,prof2;al1,prof1,prof2;;Carpeta de al1"
       # Al2
-      SHARE_al2: "al2;/shared/al2;yes;no;no;al2,prof1,prof2;;;Carpeta de al2"
-      SHARE_al2notes: "al2/Notes;/shared/al2/notes;yes;no;no;al1,prof1,prof2;;al1,prof1;Carpeta de al2"
+      SHARE_al2notes: "al2/Notes;/shared/al2/notes;yes;no;no;al2,prof1;al1,prof1;;Carpeta de al2"
       # Al3
-      SHARE_al3: "al3;/shared/al3;yes;no;no;al3,prof1,prof2;;;Carpeta de al3"
-      SHARE_al3notes: "al3/Notes;/shared/al3/notes;yes;no;no;al3,prof1,prof2;;al1,prof2;Carpeta de al3"
+      SHARE_al3notes: "al3/Notes;/shared/al3/notes;yes;no;no;al3,prof2;al1,prof2;;Carpeta de al3"
 volumes:
   samba_folder:
