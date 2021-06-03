@@ -12,6 +12,8 @@ services:
       - "./stack/openfire/lib_openfire:/var/lib/openfire:rw"
       - "./stack/openfire/etc_openfire:/etc/openfire:rw"
       - "./stack/nginx/www/web11/html/privatefolder/logs/openfire:/var/log/openfire:rw"
+    environment:
+      TZ: "Europe/Madrid"
 networks:
   outside:
     external:

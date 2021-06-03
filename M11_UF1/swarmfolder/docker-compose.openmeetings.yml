@@ -8,6 +8,8 @@ services:
       - "./stack/openmeetings/data:/opt/omdata:rw"
       - "./stack/openmeetings/mysql:/var/lib/mysql:rw"
       - "./stack/openmeetings/logs:/var/log/kurento-media-server:rw"
+    environment:
+      TZ: "Europe/Madrid"
 networks:
   outside:
     external:

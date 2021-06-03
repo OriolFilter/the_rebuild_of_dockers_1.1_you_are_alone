@@ -11,6 +11,8 @@ services:
         published: 443
         protocol: tcp
         mode: host
+    environment:
+      TZ: "Europe/Madrid"
     volumes:
       - "./stack/nginx/conf/conf.d/web11.conf:/etc/nginx/conf.d/web11.conf:ro"
       - "./stack/nginx/conf/conf.d/web22.conf:/etc/nginx/conf.d/web22.conf:ro"

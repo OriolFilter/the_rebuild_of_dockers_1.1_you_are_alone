@@ -31,6 +31,7 @@ docker pull classcat/postfix-dovecot;
 #docker pull \"ccrisan/motioneye:master-amd64\";
 #docker pull \"apache/openmeetings:6.0.0\";
 docker pull dperson/samba;
+docker pull rordi/docker-antivirus;
 
 cd ./$FILESFOLDER/;
 
@@ -62,8 +63,9 @@ docker stack deploy -c docker-compose.mail.yml mail;
 #docker stack deploy -c docker-compose.openfire.yml openfire;
 #docker stack deploy -c docker-compose.motioneye.yml motioneye;
 #docker stack deploy -c docker-compose.openmeetings.yml openmeetings;
-docker stack deploy -c docker-compose.antivirus.yml antivirus;
 docker stack deploy -c docker-compose.samba.yml samba;
+#Samba crea els volums que lantivirus fara servir;
+docker stack deploy -c docker-compose.antivirus.yml antivirus;
 
 
 watch docker service ls;

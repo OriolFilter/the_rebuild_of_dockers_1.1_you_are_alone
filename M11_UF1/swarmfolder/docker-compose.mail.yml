@@ -9,6 +9,7 @@ services:
       - "110:110"
       - "143:143"
     environment:
+      TZ: "Europe/Madrid"
       ROOT_PASSWORD: mypassword
       HOSTNAME: carter.ofa.itb
       DOMAINNAME: ofa.itb

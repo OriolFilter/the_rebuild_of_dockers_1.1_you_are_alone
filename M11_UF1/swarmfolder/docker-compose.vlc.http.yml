@@ -7,6 +7,8 @@ services:
         published: 8123
         protocol: tcp
         mode: host
+    environment:
+      TZ: "Europe/Madrid"
     volumes:
       - "${EMERGENCYVIDEO:-./stack/streaming_files/videoplayback.mp4}:/data/file.mp4:ro"
 

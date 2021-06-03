@@ -31,9 +31,9 @@ services:
       # Alumnes
       SHARE_al1notes: "al1/Notes;/shared/al1/notes;yes;no;no;al1,prof1,prof2;al1,prof1,prof2;;Carpeta de al1"
       # Al2
-      SHARE_al2notes: "al2/Notes;/shared/al2/notes;yes;no;no;al2,prof1;al1,prof1;;Carpeta de al2"
+      SHARE_al2notes: "al2/Notes;/shared/al2/notes;yes;no;no;al2,prof1;al2,prof1;;Carpeta de al2"
       # Al3
-      SHARE_al3notes: "al3/Notes;/shared/al3/notes;yes;no;no;al3,prof2;al1,prof2;;Carpeta de al3"
+      SHARE_al3notes: "al3/Notes;/shared/al3/notes;yes;no;no;al3,prof2;al3,prof2;;Carpeta de al3"
 
       # Share - antivirus
       SHARE_uploads: "uploads;/uploads/uploads;yes;no;no;prof1,prof2;prof1,prof2;;Carpeta per pujar fitxers"

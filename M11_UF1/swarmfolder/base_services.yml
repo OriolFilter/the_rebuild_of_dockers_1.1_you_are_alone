@@ -17,7 +17,7 @@ services:
       restart_policy:
         condition: on-failure
     environment:
-      ROOT_PASSWORD: verysecurepassword
+      TZ: "Europe/Madrid"
     networks:
       - outside
     labels:
