@@ -1,0 +1,20 @@
+echo "Oriol Filter Anson"
+echo "M08 UF1"
+
+dig router.ofa.itb
+sleep 1
+dig bdd.jdn.itb
+sleep 1
+dig eq1.ofa.itb
+sleep 1
+dig eq2.ofa.itb
+sleep 1
+ip a
+ip r
+sleep 1
+nmcli dev show enp0s3 | grep IP4
+sleep 1
+wget www.itb.cat
+sleep 1
+firefox https://www.marca.com/
+firefox https://www.ccma.cat/tv3/

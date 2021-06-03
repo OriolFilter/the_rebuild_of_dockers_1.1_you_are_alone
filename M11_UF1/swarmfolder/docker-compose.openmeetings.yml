@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  openfire:
+    image:  "apache/openmeetings:6.0.0"
+    ports:
+      - "5443:5443"
+    volumes:
+      - "./stack/openmeetings/data:/opt/omdata:rw"
+      - "./stack/openmeetings/mysql:/var/lib/mysql:rw"
+      - "./stack/openmeetings/logs:/var/log/kurento-media-server:rw"
+networks:
+  outside:
+    external:
+      name: "host"

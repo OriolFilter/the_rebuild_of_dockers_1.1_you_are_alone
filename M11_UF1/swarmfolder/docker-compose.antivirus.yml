@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  clamav:
+    environment:
+      TZ: "Europe/Madrid"
+    container_name: clamav
+    image:  rordi/docker-antivirus
+    command:
+     - /usr/local/install_alerts.sh profe@carter.ofa.itb
+    volumes:
+      - "./stack/inotify_script.sh:/etc/init.d/script.sh:ro"
+      - "clamav:/var/lib/clamav:rw"
+      - "quarentine:/data/av/nok:rw"
+      - "samba_folder:/data/av/quarantine:rw"
+      - "shared_folder:/data/av/queue:rw"
+volumes:
+
+  clamav:
+  quarentine:
