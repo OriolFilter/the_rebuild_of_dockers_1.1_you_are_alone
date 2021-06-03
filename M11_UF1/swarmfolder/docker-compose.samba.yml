@@ -6,6 +6,8 @@ services:
     volumes:
       - "samba_folder:/shared:rw"
       - "./stack/samba.conf:/conf/samba.conf2:ro"
+      - "samba_uploads:/uploads/uploads:rw"
+      - "samba_ok:/uploads/ok:rw"
     ports:
       - target: 139
         published: 139
@@ -32,5 +34,12 @@ services:
       SHARE_al2notes: "al2/Notes;/shared/al2/notes;yes;no;no;al2,prof1;al1,prof1;;Carpeta de al2"
       # Al3
       SHARE_al3notes: "al3/Notes;/shared/al3/notes;yes;no;no;al3,prof2;al1,prof2;;Carpeta de al3"
+
+      # Share - antivirus
+      SHARE_uploads: "uploads;/uploads/uploads;yes;no;no;prof1,prof2;prof1,prof2;;Carpeta per pujar fitxers"
+      SHARE_ok: "uploadsok;/uploads/ok;yes;no;no;prof1,prof2;;;Carpeta de fitxers pujats i comprovats que estan 'clean'"
+
 volumes:
   samba_folder:
+  samba_uploads:
+  samba_ok:

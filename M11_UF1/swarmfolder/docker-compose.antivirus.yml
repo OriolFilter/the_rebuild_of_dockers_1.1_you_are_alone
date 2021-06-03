@@ -1,19 +1,30 @@
 version: "3.3"
 services:
-  clamav:
+
+  docker-av:
     environment:
       TZ: "Europe/Madrid"
-    container_name: clamav
-    image:  rordi/docker-antivirus
-    command:
-     - /usr/local/install_alerts.sh profe@carter.ofa.itb
+    build:
+      context: clamav_dockerfile
+    image:  custom/clamav
+    container_name: docker-av
     volumes:
-      - "./stack/inotify_script.sh:/etc/init.d/script.sh:ro"
-      - "clamav:/var/lib/clamav:rw"
-      - "quarentine:/data/av/nok:rw"
-      - "samba_folder:/data/av/quarantine:rw"
-      - "shared_folder:/data/av/queue:rw"
-volumes:
+      - "./stack/inotify_script.sh:/script/my_watcher.sh:ro"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/antivirus/clamav_nok:/data/av/nok:rw"
+      - "quarentine:/data/av/quarantine:rw"
+      - "samba_samba_uploads:/data/av/queue:rw"
+      - "samba_samba_ok:/data/av/ok:rw"
+    networks:
+      - avnetwork
+    dns:
+      - 10.10.6.1
+    entrypoint: ["bash", "-c", "/script/my_watcher.sh & disown && /usr/local/entrypoint.sh"]
+networks:
+  avnetwork:
 
-  clamav:
+volumes:
   quarentine:
+  samba_samba_uploads:
+    external: true
+  samba_samba_ok:
+    external: true

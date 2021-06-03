@@ -3,3 +3,8 @@ https://linuxconfig.org/ssh-password-testing-with-hydra-on-kali-linux
 > https://sosedoff.com/2015/12/19/docker-ssh-honeypot.html
 
 https://hydrasky.com/network-security/ssh-honeypot/
+
+
+> IDS https://nullsweep.com/host-based-intrusion-prevention-and-detection-for-docker/
+
+> https://github.com/Charlie-belmer/Docker-security-example/blob/master/wazuh/docker-compose.yml

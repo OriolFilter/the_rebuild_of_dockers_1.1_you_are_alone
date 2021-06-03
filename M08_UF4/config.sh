@@ -59,7 +59,7 @@ docker stack deploy -c docker-compose.web.yml web;
 docker stack deploy -c docker-compose.mail.yml mail;
 docker stack deploy -c docker-compose.openfire.yml openfire;
 docker stack deploy -c docker-compose.motioneye.yml motioneye;
-docker stack deploy -c docker-compose.openmeetings.yml motioneye;
+docker stack deploy -c docker-compose.openmeetings.yml openmeetings;
 
 watch docker service ls;
 "

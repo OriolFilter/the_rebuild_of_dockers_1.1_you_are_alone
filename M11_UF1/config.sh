@@ -20,17 +20,17 @@ CMD="echo '.';
 printf '# Transferint e iniciant lscript de configuracio\n';
 
 
-#echo 'Pulling required images to speed up a little';
+echo 'Pulling required images to speed up a little';
 docker pull sameersbn/bind;
 docker pull networkboot/dhcpd;
 docker pull nginx;
-docker pull atmoz/sftp;
+#docker pull atmoz/sftp;
 docker pull classcat/postfix-dovecot;
-docker pull quantumobject/docker-openfire;
-docker pull gersilex/cvlc;
-docker pull \"ccrisan/motioneye:master-amd64\";
-docker pull \"apache/openmeetings:6.0.0\";
-docker pull apache/openmeetings;
+#docker pull quantumobject/docker-openfire;
+#docker pull gersilex/cvlc;
+#docker pull \"ccrisan/motioneye:master-amd64\";
+#docker pull \"apache/openmeetings:6.0.0\";
+docker pull dperson/samba;
 
 cd ./$FILESFOLDER/;
 
@@ -48,18 +48,23 @@ docker stack deploy --compose-file base_services.yml core;
 printf \"updating resolv\n\";
 printf \"domain $DOMAIN
 search $DOMAIN
-nameserver $IPL\n
+nameserver $IPL
 nameserver 8.8.8.8
 \" | sudo tee /etc/resolv.conf;
 
+## Build custom images
+docker build -t  custom/clamav ./clamav_dockerfile;
 
 ## Deploy the rest of services;
-docker stack deploy -c docker-compose.sftp.yml sftp;
+#docker stack deploy -c docker-compose.sftp.yml sftp;
 docker stack deploy -c docker-compose.web.yml web;
 docker stack deploy -c docker-compose.mail.yml mail;
-docker stack deploy -c docker-compose.openfire.yml openfire;
-docker stack deploy -c docker-compose.motioneye.yml motioneye;
-docker stack deploy -c docker-compose.openmeetings.yml motioneye;
+#docker stack deploy -c docker-compose.openfire.yml openfire;
+#docker stack deploy -c docker-compose.motioneye.yml motioneye;
+#docker stack deploy -c docker-compose.openmeetings.yml openmeetings;
+docker stack deploy -c docker-compose.antivirus.yml antivirus;
+docker stack deploy -c docker-compose.samba.yml samba;
+
 
 watch docker service ls;
 "

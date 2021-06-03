@@ -7,7 +7,7 @@ declare -a USERARR=('al1' 'al2' 'al3' 'prof1' 'prof2')
 
 printf "\n" | smbclient -L router | tail +5 | head -n -2 | cut -f 2 | sed 's/  */ /g' | cut -d ' ' -f 1
 
-declare -a DIRARR=($(awk '{ gsub(","," "); gsub("  "," "); gsub(" ","\n"); print}' <<< "$(printf \"\\n\" | smbclient -L router | tail +5 | head -n -2 | cut -f 2 | sed 's/  */ /g' | cut -d ' ' -f 1)"))
+declare -a DIRARR=($(awk '{ gsub(","," "); gsub("  "," "); gsub(" ","\n"); print}' <<< "$(printf \"\\n\" | smbclient -L router | tail +5 | head -n -2 | cut -f 2 | sed 's/  */ /g' | cut -d ' ' -f 1 | grep -v 'uploads')"))
 
 for user in "${USERARR[@]}" ;
 do
