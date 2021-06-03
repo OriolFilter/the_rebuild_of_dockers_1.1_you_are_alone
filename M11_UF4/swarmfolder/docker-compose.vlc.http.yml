@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  vlc:
+    image: gersilex/cvlc
+    ports:
+      - target: 8123
+        published: 8123
+        protocol: tcp
+        mode: host
+    environment:
+      TZ: "Europe/Madrid"
+    volumes:
+      - "${EMERGENCYVIDEO:-./stack/streaming_files/videoplayback.mp4}:/data/file.mp4:ro"
+
+    entrypoint: cvlc /data/file.mp4 --sout '#transcode{vcodec=MJPG,venc=ffmpeg{strict=1}}:standard{access=http{mime=multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8123/}' --no-disable-screensaver --sout-keep --loop

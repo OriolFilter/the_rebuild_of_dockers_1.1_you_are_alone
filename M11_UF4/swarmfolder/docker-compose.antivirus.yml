@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+
+  docker-av:
+    environment:
+      TZ: "Europe/Madrid"
+    build:
+      context: clamav_dockerfile
+    image:  custom/clamav
+    container_name: docker-av
+    volumes:
+      - "./stack/inotify_script.sh:/script/my_watcher.sh:ro"
+      - "./stack/nginx/www/web11/html/privatefolder/logs/antivirus/clamav_nok:/data/av/nok:rw"
+      - "quarentine:/data/av/quarantine:rw"
+      - "samba_samba_uploads:/data/av/queue:rw"
+      - "samba_samba_ok:/data/av/ok:rw"
+    networks:
+      - avnetwork
+    dns:
+      - 10.10.6.1
+    entrypoint: ["bash", "-c", "/script/my_watcher.sh & disown && /usr/local/entrypoint.sh"]
+networks:
+  avnetwork:
+
+volumes:
+  quarentine:
+  samba_samba_uploads:
+    external: true
+  samba_samba_ok:
+    external: true
