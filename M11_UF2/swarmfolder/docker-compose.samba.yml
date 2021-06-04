@@ -5,7 +5,6 @@ services:
     image:  dperson/samba
     volumes:
       - "samba_folder:/shared:rw"
-#      - "./stack/samba.conf:/conf/samba.conf2:ro"
       - "samba_uploads:/uploads/uploads:rw"
       - "samba_ok:/uploads/ok:rw"
     ports:

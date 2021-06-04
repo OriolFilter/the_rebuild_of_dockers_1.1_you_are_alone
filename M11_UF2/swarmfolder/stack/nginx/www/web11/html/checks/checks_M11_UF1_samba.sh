@@ -1,9 +1,8 @@
 #!/bin/bash
 #DESCARREGAR AQUEST FITXER A LA CARPETA DE DESCARREGAS
-
 # bash ~/{Downloads,Baixades,Descargas}/checks_M11_UF1_samba.sh
-
-#printf "\n" | smbclient -L router
+# O executar
+# curl https://web11/checks/checks_M11_UF1_samba.sh --insecure | bash
 
 printf "Carpetes disponibles:\n"
 
