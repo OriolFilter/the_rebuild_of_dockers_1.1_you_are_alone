@@ -1,1 +1,0 @@
-docker container exec -it $(docker container ls | grep 'antivirus' | cut -d ' ' -f 1) watch  ls /data/av/*
