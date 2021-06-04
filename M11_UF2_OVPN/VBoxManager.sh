@@ -74,17 +74,7 @@ vbTUNEJOS="--memory $RAMM --vram 32 --pae on --hwvirtex on --boot1 disk --audio 
 
 vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgenericdrv2 VDE --nicproperty2 network=/tmp/serverSwitch[9]"
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "sftp,tcp,,23,,23" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "web,tcp,,80,,80" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "webS,tcp,,443,,443" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailb,tcp,,25,,25" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailc,tcp,,110,,110" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "mailc,tcp,,143,,143" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "openeyea,tcp,,8675,,8675" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "openeyeb,tcp,,8999,,8999" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "vlc,tcp,,8123,,8123" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "webS,tcp,,443,,443" # Port forwarding Virtualbox
-VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "openmeets,tcp,,5443,,5443" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "ovpn,tcp,,1194,,1194" # Port forwarding Virtualbox
 
 # Iniciar maquina virtual sense finestra (headless)
 
