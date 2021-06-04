@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm /tmp/ovpn_certs -rfv
+cp -rv ./volumes/ovpn_certs /tmp
+cp users /tmp/ovpn_certs

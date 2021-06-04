@@ -1,0 +1,3 @@
+#!/bin/bash
+#REGEX="CERT_"
+#rm -v $(find -name "$REGEX*")

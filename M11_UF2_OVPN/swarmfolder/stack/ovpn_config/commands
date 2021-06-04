@@ -1,0 +1,59 @@
+#!/bin/bash
+
+
+# Cleaning
+# rm volumes/openvpn/* -rf && rm volumes/ovpn_certs/* -rf
+
+# Vars
+CONTAINER='ovpn'
+#DOMAIN='vpn.filter.home'
+DOMAIN="$(curl ifconfig.me.)"
+#DOMAIN='192.168.1.2'
+export COMPOSE_INTERACTIVE_NO_CLI=1
+
+# Gen Config
+#echo "docker-compose run --rm \"$CONTAINER\" ovpn_genconfig -u \"udp://$DOMAIN\""
+#docker-compose run --rm "$CONTAINER"  ovpn_genconfig -u "udp://$DOMAIN"
+
+# Generar Certs
+
+CAPASS='vfzfyEqYaSMaUgjWnvWrNYzqApcank64baPZdTcuXLPWArCzfb'
+COMMONNAME=''
+KEYPASSPHRASE=''
+
+printf "# CA PASSWORD:: '$CAPASS'\n# DOMAIN:: '$DOMAIN'\n"
+#docker-compose run --rm "$CONTAINER" ovpn_initpki
+
+
+
+# Create OVPN Cli Certs
+
+#CLIENTNAME='MARC COSMIN ISAAC'
+#declare -a CLIENTNAME=('CERT_PEBBKATS')
+#declare -a CLIENTNAME=('CERT_MEESE')
+#declare -a CLIENTNAME=('CERT_TEST')
+declare -a CLIENTNAME=('MARC' 'COSMIN' 'ISAAC')
+#declare -a CLIENTNAME=('MARC' 'COSMIN' 'ISAAC')
+
+CERTS_FOLDER='./volumes/ovpn_certs/'
+USERS_FILE='./users'
+PASS_VAR=''
+for user in "${CLIENTNAME[@]}"
+do
+   docker-compose run --rm $CONTAINER ovpn_revokeclient $user remove
+   printf "Introduce a password for the user $user: "
+   read -s user_password
+
+   if [ "$user_password" = "nopass" ] || [ "$user_password" = "" ]; then
+      PASS_VAR='nopass'
+      user_password='nopass'
+   fi
+
+   printf "\n# USER: $user\n# PASSWORD: $user_password\n# CA PASSWD: $CAPASS\n"
+   printf "$user:::$user_password\n" | tee -a $USERS_FILE &> /dev/null
+
+   docker-compose run --rm $CONTAINER easyrsa build-client-full "$user" "$PASS_VAR"
+   docker-compose run --rm $CONTAINER ovpn_getclient "$user" > "${CERTS_FOLDER}${user}.ovpn"
+   user_password=''
+   cat "${CERTS_FOLDER}${user}.ovpn"
+done

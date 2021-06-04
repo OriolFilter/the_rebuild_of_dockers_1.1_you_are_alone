@@ -1,0 +1,3 @@
+#!/bin/bash
+rm ../ovpn.bk -rfv
+cp ../ovpn ../ovpn.bk -rv
