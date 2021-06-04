@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  motioneye:
+    image: "ccrisan/motioneye:master-amd64"
+    ports:
+      - target: 8765
+        published: 8765
+        protocol: tcp
+        mode: host
+      - target: 8799
+        published: 8799
+        protocol: tcp
+        mode: host
+    volumes:
+      - "./stack/motioneye/config:/etc/motioneye:rw" # Motioneye config
+      - "./stack/motioneye/camera:/var/lib/motioneye:rw" # Camera config
+      - "./stack/nginx/www/web11/html/privatefolder/logs/motioneye/motion.log:/var/log/motion.log:rw" # Log

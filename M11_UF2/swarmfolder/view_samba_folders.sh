@@ -1,0 +1,1 @@
+docker container exec -it $(docker container ls | grep 'samba' | cut -d ' ' -f 1) watch  ls /uploads/*/*

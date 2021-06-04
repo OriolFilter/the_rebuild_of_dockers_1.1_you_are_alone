@@ -34,6 +34,7 @@ ftp		    IN	CNAME router.OFA.itb.
 sftp		IN	CNAME router.OFA.itb.
 media		IN	CNAME router.OFA.itb.
 samba		IN	CNAME router.OFA.itb.
+smb 		IN	CNAME router.OFA.itb.
 share		IN	CNAME router.OFA.itb.
 shared		IN	CNAME router.OFA.itb.
 
