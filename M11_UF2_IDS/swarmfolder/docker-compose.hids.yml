@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   wazuh:
-    image: wazuh/wazuh-odfe:4.3.0
+    image: "wazuh/wazuh-odfe:4.1.5"
     hostname: wazuh-manager
     restart: always
     ports:
@@ -29,7 +29,7 @@ services:
       - filebeat_var:/var/lib/filebeat
 
   elasticsearch:
-    image: amazon/opendistro-for-elasticsearch:1.13.2
+    image: "amazon/opendistro-for-elasticsearch:1.13.2"
     hostname: elasticsearch
     restart: always
     ports:
@@ -49,11 +49,12 @@ services:
         hard: 65536
 
   kibana:
-    image: wazuh/wazuh-kibana-odfe:4.3.0
+    image: "wazuh/wazuh-kibana-odfe:4.1.5"
     hostname: kibana
     restart: always
     ports:
-      - 443:5601
+#      - 443:5601
+      - "444:5601"
     environment:
       - ELASTICSEARCH_USERNAME=admin
       - ELASTICSEARCH_PASSWORD=admin

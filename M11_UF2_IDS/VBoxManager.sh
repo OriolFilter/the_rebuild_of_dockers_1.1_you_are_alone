@@ -15,7 +15,7 @@ SSH="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o loglevel=ERR
 
 # VBOX
 NAMEVM="MAINS-OFA" #Name Virtual Machine
-RAMM=2048 # 2GB 
+RAMM=6144 # 2GB
 #VMF="$1" # Virtual Machine File
 VMF="../UbuSrvDockerNFS.vdi" # Virtual Machine File
 echo $VMF

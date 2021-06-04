@@ -45,3 +45,12 @@ guasap		IN	CNAME mail.OFA.itb.
 pop3		IN	CNAME mail.OFA.itb.
 imap		IN	CNAME mail.OFA.itb.
 smtp		IN	CNAME mail.OFA.itb.
+
+
+
+ids		            IN	CNAME router.OFA.itb.
+hids		        IN	CNAME ids.OFA.itb.
+elasticsearch		IN	CNAME hids.OFA.itb.
+elastic		        IN	CNAME hids.OFA.itb.
+wazuh		        IN	CNAME hids.OFA.itb.
+kibana		        IN	CNAME kazuh.OFA.itb.

@@ -23,15 +23,7 @@ printf '# Transferint e iniciant lscript de configuracio\n';
 echo 'Pulling required images to speed up a little';
 docker pull sameersbn/bind;
 docker pull networkboot/dhcpd;
-docker pull nginx;
-#docker pull atmoz/sftp;
 docker pull classcat/postfix-dovecot;
-#docker pull quantumobject/docker-openfire;
-#docker pull gersilex/cvlc;
-#docker pull \"ccrisan/motioneye:master-amd64\";
-#docker pull \"apache/openmeetings:6.0.0\";
-docker pull dperson/samba;
-docker pull rordi/docker-antivirus;
 
 cd ./$FILESFOLDER/;
 
@@ -53,24 +45,17 @@ nameserver $IPL
 nameserver 8.8.8.8
 \" | sudo tee /etc/resolv.conf;
 
-## Build custom images
-docker build -t  custom/clamav ./clamav_dockerfile;
-
 ## Deploy the rest of services;
-#docker stack deploy -c docker-compose.sftp.yml sftp;
-docker stack deploy -c docker-compose.web.yml web;
 docker stack deploy -c docker-compose.mail.yml mail;
-#docker stack deploy -c docker-compose.openfire.yml openfire;
-#docker stack deploy -c docker-compose.motioneye.yml motioneye;
-#docker stack deploy -c docker-compose.openmeetings.yml openmeetings;
-docker stack deploy -c docker-compose.samba.yml samba;
-#Samba crea els volums que lantivirus fara servir;
-docker stack deploy -c docker-compose.antivirus.yml antivirus;
 
-
+sudo apt-get  update  && sudo apt-get  -y install  python3 git
+sudo  curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose
+sudo  chmod +x /usr/local/bin/docker-compose
+./wazuh.sh
 watch docker service ls;
 "
 
 ### Command end
 
 ssh -p $SSHP $SSH -t $USERNAME@localhost "bash -c $CMD";
+
