@@ -48,10 +48,9 @@ nameserver 8.8.8.8
 ## Deploy the rest of services;
 docker stack deploy -c docker-compose.mail.yml mail;
 
-sudo apt-get  update  && sudo apt-get  -y install  python3 git
-sudo  curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose
-sudo  chmod +x /usr/local/bin/docker-compose
-./wazuh.sh
+sudo apt-get  update  && sudo apt-get  -y install  python3 git;
+sudo  curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose;
+sudo  chmod +x /usr/local/bin/docker-compose;
 watch docker service ls;
 "
 

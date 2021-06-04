@@ -6,14 +6,12 @@
 
 # Vars
 CONTAINER='ovpn'
-#DOMAIN='vpn.filter.home'
-DOMAIN="$(curl ifconfig.me.)"
-#DOMAIN='192.168.1.2'
+DOMAIN="192.168.1.117"
 export COMPOSE_INTERACTIVE_NO_CLI=1
 
 # Gen Config
-#echo "docker-compose run --rm \"$CONTAINER\" ovpn_genconfig -u \"udp://$DOMAIN\""
-#docker-compose run --rm "$CONTAINER"  ovpn_genconfig -u "udp://$DOMAIN"
+echo "docker-compose run --rm \"$CONTAINER\" ovpn_genconfig -u \"udp://$DOMAIN\""
+docker-compose run --rm "$CONTAINER"  ovpn_genconfig -u "udp://$DOMAIN"
 
 # Generar Certs
 
@@ -27,13 +25,7 @@ printf "# CA PASSWORD:: '$CAPASS'\n# DOMAIN:: '$DOMAIN'\n"
 
 
 # Create OVPN Cli Certs
-
-#CLIENTNAME='MARC COSMIN ISAAC'
-#declare -a CLIENTNAME=('CERT_PEBBKATS')
-#declare -a CLIENTNAME=('CERT_MEESE')
-#declare -a CLIENTNAME=('CERT_TEST')
-declare -a CLIENTNAME=('MARC' 'COSMIN' 'ISAAC')
-#declare -a CLIENTNAME=('MARC' 'COSMIN' 'ISAAC')
+declare -a CLIENTNAME=('user1')
 
 CERTS_FOLDER='./volumes/ovpn_certs/'
 USERS_FILE='./users'

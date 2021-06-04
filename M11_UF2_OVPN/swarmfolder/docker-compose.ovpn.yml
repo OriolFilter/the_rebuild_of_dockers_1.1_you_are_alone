@@ -1,0 +1,22 @@
+version: "3"
+services:
+  ovpn:
+    container_name: ovpn
+    privileged: true
+    cap_add:
+     - NET_ADMIN
+    image: kylemanna/openvpn
+    ports:
+      - "1194:1194/udp"
+    environment:
+      - DEBUGG=1
+    volumes:
+      - ./stack/openvpn:/etc/openvpn
+    networks:
+      - host
+    stdin_open: true
+    tty: true
+
+
+networks:
+  host:

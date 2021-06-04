@@ -3,10 +3,8 @@ services:
   ovpn:
     container_name: ovpn
     privileged: true
-#    tty: true
     cap_add:
      - NET_ADMIN
-#    build: .
     image: darathor/openvpn
     ports:
       - "1194:1194/udp"
@@ -14,21 +12,8 @@ services:
       - DEBUGG=1
     volumes:
       - ./volumes/openvpn:/etc/openvpn
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1000M
-      restart_policy:
-        condition: any
-        delay: 5s
-#        max_attempts: 3
-#        window: 120s
     networks:
       - host
 
 networks:
   host:
-#volumes:
-#  logvolume01: {}
-
