@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Aquest script ha de ser executat per la maquina "DMZ" (192.168.254.25)
+# Aquest script publica els ports de l'array
+
+declare -A port_enabled=(["SFTP"]=23
+["SMTP"]=25
+["DNS"]=53
+["POP3"]=110
+["NETBIOS"]=139
+["IMAP"]=143
+["SMB"]=445
+["OPENMEETINGS"]=5443
+["OPENFIRE"]=9090
+)
+
+
+for service in "${!port_enabled[@]}"; do
+  echo "listening to port ${port_enabled["DNS"]} for service: $service"
+  bash $(dirname $0)/open_portsh ${port_enabled[$service]} & disown
+done
