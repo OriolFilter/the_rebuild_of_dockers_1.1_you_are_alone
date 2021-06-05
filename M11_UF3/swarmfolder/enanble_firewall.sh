@@ -32,9 +32,9 @@ allow="ACCEPT"
 
 ### Interfaces
 iface_lo="lo"
-iface_pub="eth0"  # INTERNET
-iface_dmz="eth1"  # DMZ
-iface_lan="eth2"  # LAN
+iface_pub="enp0s3"  # INTERNET
+iface_dmz="enp0s8"  # DMZ
+iface_lan="enp0s9"  # LAN
 
 ### DMZ
 net_dmz="192.168.254.0"
@@ -100,40 +100,40 @@ declare -A  web_public_enabled=(["HTTP"]=1
 printf "Start\n"
 
 ### Reset/Flush
-#iptables -F
-#iptables -X
-#iptables -Z
-#iptables -t nat -F
+iptables -F
+iptables -X
+iptables -Z
+iptables -t nat -F
 #
 ### Default DROP
-#iptables -P INPUT $kill
-#iptables -P OUTPUT $kill
-#iptables -P FORWARD $kill
+iptables -P INPUT $kill
+iptables -P OUTPUT $kill
+iptables -P FORWARD $kill
 #
 ### Enable communication
 
-#iptables -A INPUT -m state --state ESTABLISHED,RELATED -j $allow && \
-#iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j $allow && \
-#iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j $allow  && \
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j $allow && \
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j $allow && \
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j $allow  && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled communication between clients that already connected\n"
 #
 ### Enable forwarding
 #
-#echo 1 > /proc/sys/net/ipv4/ip_forward && printf "FORWARD ENABLED\n" && \
+echo 1 > /proc/sys/net/ipv4/ip_forward && printf "FORWARD ENABLED\n" && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled port forwarding in the system\n"
 #
 ##https://serverfault.com/questions/371316/iptables-difference-between-new-established-and-related-packets
 #
 #### Enable CONNECT to public services
-#iptables -A FORWARD -p tcp --dport ${port_dict["HTTP"]} -m state --state NEW -j $allow && \
-#iptables -A FORWARD -p tcp --dport ${port_dict["HTTPS"]} -m state --state NEW -j $allow && \
-#iptables -A FORWARD -p tcp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
-#iptables -A FORWARD -p udp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
+iptables -A FORWARD -p tcp --dport ${port_dict["HTTP"]} -m state --state NEW -j $allow && \
+iptables -A FORWARD -p tcp --dport ${port_dict["HTTPS"]} -m state --state NEW -j $allow && \
+iptables -A FORWARD -p tcp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
+iptables -A FORWARD -p udp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection public services (WEB && DNS)\n"
 #
 #### MASQUERADE (enable outgoing traffic)
-#iptables -t nat -A POSTROUTING -s "${net_emp}/${net_emp_mask}" -o $iface_pub -j MASQUERADE && \
-#iptables -t nat -A POSTROUTING -s "${net_dmz}/${net_dmz_mask}" -o $iface_pub -j MASQUERADE && \
+iptables -t nat -A POSTROUTING -s "${net_emp}/${net_emp_mask}" -o $iface_pub -j MASQUERADE && \
+iptables -t nat -A POSTROUTING -s "${net_dmz}/${net_dmz_mask}" -o $iface_pub -j MASQUERADE && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection to the internet\n"
 
 
@@ -142,7 +142,7 @@ printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFA
 # NAT to DMZ PREROUTING
 for service in "${!dmz_public_enabled[@]}"; do
   if [[ 1 -eq "${dmz_public_enabled[$service]}" ]] ; then
-#      iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_dmz}:${port_dict[$service]}" && \
+      iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_dmz}:${port_dict[$service]}" && \
       printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
@@ -150,7 +150,7 @@ done
 # NAT to WEB PREROUTING
 for service in "${!port_dict[@]}"; do
   if [[ 1 -eq "${web_public_enabled[$service]}" ]] ; then
-#      iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_web}:${port_dict[$service]}" && \
+      iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_web}:${port_dict[$service]}" && \
       printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
@@ -158,16 +158,39 @@ done
 ### FORWARDING
 # WEB to DB  ENABLE
 service=$db_name
-#iptables -A FORWARD -s $ip_web -d $ip_db -p tcp --dport "${port_dict[$service]}" -j $allow && \
+iptables -A FORWARD -s $ip_web -d $ip_db -p tcp --dport "${port_dict[$service]}" -j $allow && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}WEB Server${COLOR_DEFAULT} to the ${COLOR_BLUE}DATABASE${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
 # DB to WEB  ENABLE
-#iptables -A FORWARD -s $ip_db -d $ip_web -p tcp --dport "${port_dict[$service]}" -j $allow && \
+iptables -A FORWARD -s $ip_db -d $ip_web -p tcp --dport "${port_dict[$service]}" -j $allow && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}DATABASE${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
 
 # LAN to DMZ ENABLE
 for service in "${!dmz_local_enabled[@]}"; do
   if [[ 1 -eq "${dmz_local_enabled[$service]}" ]] ; then
-#      iptables -t nat -A FORWARD -s "${net_emp}/${net_emp_mask}" -d $iface_dmz -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
+      iptables -t nat -A FORWARD -s "${net_emp}/${net_emp_mask}" -d $iface_dmz -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
       printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}LAN${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
+
+# END
+
+
+### PRINT CURRENT FIREWALL RULES
+sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "."
+printf "\nFinished configuring the firewall"
+printf "\nPrinting current INPUT rules:\n"
+printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2"
+printf "\n"
+iptables -L INPUT
+printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2"
+printf "\nPrinting current OUTPUT rules:\n"
+printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2"
+printf "\n"
+iptables -L OUTPUT
+printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2"
+printf "\nPrinting current FORWARD rules:\n"
+printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2"
+printf "\n"
+iptables -L FORWARD
+sleep 2
+printf "\n(END)\n"

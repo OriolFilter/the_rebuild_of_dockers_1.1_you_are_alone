@@ -24,7 +24,8 @@ echo $VMF
 IPL="10.10.6.254" #IP local
 IPL="10.10.6.1" #IP local
 IPLN="10.10.6.0" #IP local NETWORK/24, podria fer una variable per la xarxa
-# DGVM="192.168.1.1" "Default Gateway Virtual Machine
+IPDMZ="192.168.254.1" #IP DMZ
+IPDMZN="192.168.254.0" #IP DMZ/24
 USER='sjo'
 
 # SSH
@@ -40,11 +41,6 @@ printf "~~~~~~\ :$NAMEVM:
 ~~~~~~\ $SSHP port SSH
 " 
 # ~~~~~~\ $DGVM: Gateway (DISABLED)
-
-### Executa VDEServer AMB el DPIPE
-
-./VDEServer.bash 1
-
 
 ## Neteja
 rm CLAU
@@ -72,9 +68,10 @@ VBoxManage storageattach "$NAMEVM" --storagectl jgdiscos --port 0 --device 0 --t
 
 vbTUNEJOS="--memory $RAMM --vram 32 --pae on --hwvirtex on --boot1 disk --audio none --accelerate3d on --usb off " # Variable Holder 1
 
-vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgenericdrv2 VDE --nicproperty2 network=/tmp/serverSwitch[9]"
+vbNICS="--nic1 nat --nictype1 virtio --nic2 intnet --nic3 intnet"
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "ovpn,udp,,1194,,1194" # Port forwarding Virtualbox
+# Create DMZ NETWORK
 
 # Iniciar maquina virtual sense finestra (headless)
 
@@ -124,8 +121,13 @@ network:
     enp0s8:
       dhcp4: no
       dhcp6: no
+      addresses: [$IPDMZ/24]
+      nameservers:
+        addresses: [127.0.0.1,8.8.4.4]
+    enp0s9:
+      dhcp4: no
+      dhcp6: no
       addresses: [$IPL/24]
-#      gateway4: $IPL
       nameservers:
         addresses: [127.0.0.1,8.8.4.4]
 FINAL

@@ -20,10 +20,10 @@ CMD="echo '.';
 printf '# Transferint e iniciant lscript de configuracio\n';
 
 
-echo 'Pulling required images to speed up a little';
-docker pull sameersbn/bind;
-docker pull networkboot/dhcpd;
-docker pull classcat/postfix-dovecot;
+#echo 'Pulling required images to speed up a little';
+#docker pull sameersbn/bind;
+#docker pull networkboot/dhcpd;
+#docker pull classcat/postfix-dovecot;
 
 cd ./$FILESFOLDER/;
 
@@ -36,7 +36,7 @@ sudo systemctl disable systemd-resolved;
 
 
 # Deploy first stack, which contains the core services: DHCP & DNS;
-docker stack deploy --compose-file base_services.yml core;
+#docker stack deploy --compose-file base_services.yml core;
 
 printf \"updating resolv\n\";
 printf \"domain $DOMAIN
@@ -45,10 +45,10 @@ nameserver $IPL
 nameserver 8.8.8.8
 \" | sudo tee /etc/resolv.conf;
 
-watch docker service ls;
 "
 
 ### Command end
 
 ssh -p $SSHP $SSH -t $USERNAME@localhost "bash -c $CMD";
 
+echo "RECORDA CAMBIAR LA SEGONA XARXA DE INAT A DMZ!!";
