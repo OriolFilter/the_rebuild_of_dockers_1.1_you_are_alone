@@ -57,24 +57,5 @@ export CLIENT_DNS=\"8.8.8.8,8.8.4.4\"
 
 bash install_wireguard_and_move_conf.sh
 "
-#watch docker service ls;
-
-#sudo apt-get  update  && sudo apt-get  -y install  python3 git
-#sudo apt-get  update  && sudo apt-get  -y install  python3 git
-#sudo  curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose
-#sudo  chmod +x /usr/local/bin/docker-compose
 ### Command end
 ssh -p $SSHP $SSH -t $USERNAME@localhost "bash -c $CMD";
-
-#
-#echo "
-#export INTERACTIVE='no';
-#export PRIVATE_SUBNET='10.6.0.0/24'
-#export SERVER_HOST='192.168.1.117';
-#export SERVER_PORT='51820';
-#export CLIENT_DNS='8.8.8.8,8.8.4.4';" > /tmp/cmd
-##sudo su < 'bash /tmp/cmd';
-##"
-##
-#scp -P $SSHP $SSH  -r /tmp/cmd $USERNAME@localhost:/tmp/cmd
-#ssh -p $SSHP $SSH -t $USERNAME@localhost "cat /tmp/cmd | sudo bash";

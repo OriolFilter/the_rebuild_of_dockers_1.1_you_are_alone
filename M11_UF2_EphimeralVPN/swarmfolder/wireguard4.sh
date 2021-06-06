@@ -1,1 +1,0 @@
-#https://blog.jessfraz.com/post/installing-and-using-wireguard/

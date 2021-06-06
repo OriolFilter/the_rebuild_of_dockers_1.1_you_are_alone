@@ -1,9 +1,9 @@
 ## REQUISITES
 # docker running and access to it
-
+cd $(dirname $0)
 ## VARS
 # SERVER
-PIP="192.168.1.117" #Public IP
+PIP="192.168.1.212" #Public IP
 POP=51820 # Public Open Port
 IFACE="enp0s8" # Interface to redirect the traffic
 ADDRESS="10.10.6.0/24" # Address to give the server
@@ -43,7 +43,7 @@ PrivateKey = $(cat srv/srv_privatekey)
 [Peer]
 PublicKey = $(cat cli/cli_publickey)
 AllowedIPs = ${CLIIP}/32
-" | tee srv/w0.conf
+" | tee srv/wg0.conf
 
 printf "\n"
 echo "----------------------------------"
@@ -59,10 +59,10 @@ ListenPort = 49539
 PrivateKey = $(cat cli/cli_privatekey)
 
 [Peer]
-PublicKey = $(cat cli/cli_publickey)
+PublicKey = $(cat srv/srv_publickey)
 AllowedIPs = $ALLOWEDIPS
 Endpoint = $PIP:$POP
 PersistentKeepalive = 30
-" | tee srv/w0.conf
+" | tee cli/wg0.conf
 printf "\n"
 
