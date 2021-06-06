@@ -100,4 +100,4 @@ echo "Iniciant CURL a google.es\n";
 curl "google.es";
 
 echo "Check de update\n";
-sudo apt-get uppdate
+sudo apt-get update
