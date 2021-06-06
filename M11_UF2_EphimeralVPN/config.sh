@@ -16,6 +16,7 @@ scp -P $SSHP $SSH  -r $SCRIPTFOLDER/$FILESFOLDER/ $USERNAME@localhost:~
 
 ### Command start
 
+
 CMD="echo '.';
 printf '# Transferint e iniciant lscript de configuracio\n';
 
