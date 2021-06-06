@@ -4,7 +4,7 @@
 
 declare -A port_enabled=(["SFTP"]=23
 ["SMTP"]=25
-["DNS"]=53
+# ["DNS"]=53 systemd-resolve default enabled on ubuntu clients, which im using for testing.
 ["POP3"]=110
 ["NETBIOS"]=139
 ["IMAP"]=143
