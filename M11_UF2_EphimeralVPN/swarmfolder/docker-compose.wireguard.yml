@@ -1,0 +1,44 @@
+#  https://www.reddit.com/r/WireGuard/comments/enl364/cant_even_install_wireguard_on_ubuntu/
+version: "3.3"
+services:
+  wireguard:
+    image: linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ="Europe/Madrid"
+      - SERVERURL=192.168.1.117
+      - SERVERPORT=51820
+      - PEERS=testing
+      - PEERDNS=AUTO
+      - INTERNAL_SUBNET=10.6.0.0
+    volumes:
+      - ./stack/wireward/config:/config
+      - /lib/modules:/lib/modules
+      - /usr/src:/usr/src
+    ports:
+      - "51820:51820/udp"
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.conf.all.forwarding=1
+#    restart: unless-stopped
+
+  docker run \
+  --name wireguard \
+  --cap-add=NET_ADMIN \
+  --cap-add=SYS_MODULE \
+  -e PUID=1000 -e PGID=1000 \
+  -e TZ=Europe/London \
+  -e SERVERURL=192.168.1.117 \
+  -e PEERS=laptop,tablet,phone \
+  -e PEERDNS=auto \
+  -p 51820:51820/udp \
+  -v wireguard_config:/config \
+  -v /lib/modules:/lib/modules \
+  --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
+  --restart=unless-stopped \
+  linuxserver/wireguard

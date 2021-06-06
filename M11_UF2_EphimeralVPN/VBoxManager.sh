@@ -74,6 +74,7 @@ vbTUNEJOS="--memory $RAMM --vram 32 --pae on --hwvirtex on --boot1 disk --audio 
 
 vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgenericdrv2 VDE --nicproperty2 network=/tmp/serverSwitch[9]"
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
+VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "wireward,tcp,,51820,,51820" # Port forwarding Virtualbox
 
 # Iniciar maquina virtual sense finestra (headless)
 
