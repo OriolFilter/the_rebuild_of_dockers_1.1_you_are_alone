@@ -81,6 +81,7 @@ declare -A  dmz_public_enabled=(["SFTP"]=1
 )
 
 declare -A  dmz_local_enabled=(["SFTP"]=1
+["SMTP"]=1
 ["DNS"]=1
 ["POP3"]=1
 ["NETBIOS"]=1
@@ -114,26 +115,24 @@ iptables -P FORWARD $kill
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j $allow && \
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j $allow && \
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j $allow  && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled communication between clients that already connected\n"
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}ESTABLISHED, RELATED${COLOR_DEFAULT} between clients that already connected\n"
 #
 ### Enable forwarding
 #
 echo 1 > /proc/sys/net/ipv4/ip_forward && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled port forwarding in the system\n"
-#
-##https://serverfault.com/questions/371316/iptables-difference-between-new-established-and-related-packets
-#
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}port forwarding${COLOR_DEFAULT} in the system\n"
+
 #### Enable CONNECT to public services
-iptables -A FORWARD -p tcp --dport ${port_dict["HTTP"]} -m state --state NEW -j $allow && \
-iptables -A FORWARD -p tcp --dport ${port_dict["HTTPS"]} -m state --state NEW -j $allow && \
-iptables -A FORWARD -p tcp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
-iptables -A FORWARD -p udp --dport ${port_dict["DNS"]} -m state --state NEW -j $allow && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection public services (WEB && DNS)\n"
+iptables -A FORWARD -p tcp --dport "${port_dict["HTTP"]}" -m state --state NEW -j $allow && \
+iptables -A FORWARD -p tcp --dport "${port_dict["HTTPS"]}" -m state --state NEW -j $allow && \
+iptables -A FORWARD -p tcp --dport "${port_dict["DNS"]}" -m state --state NEW -j $allow && \
+iptables -A FORWARD -p udp --dport "${port_dict["DNS"]}" -m state --state NEW -j $allow && \
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}FORWARD${COLOR_DEFAULT} so devices can update\n"
 #
 #### MASQUERADE (enable outgoing traffic)
 iptables -t nat -A POSTROUTING -s $net_emp -o $iface_pub -j MASQUERADE && \
 iptables -t nat -A POSTROUTING -s $net_dmz -o $iface_pub -j MASQUERADE && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection to the internet\n"
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} Enabled ${COLOR_YELLOW}POSTROUTING${COLOR_DEFAULT} to the internet\n"
 
 
 
@@ -142,7 +141,7 @@ printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFA
 for service in "${!dmz_public_enabled[@]}"; do
   if [[ 1 -eq "${dmz_public_enabled[$service]}" ]] ; then
       iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_dmz}:${port_dict[$service]}" && \
-      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}PREROUTING${COLOR_DEFAULT} from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
 
@@ -150,7 +149,7 @@ done
 for service in "${!port_dict[@]}"; do
   if [[ 1 -eq "${web_public_enabled[$service]}" ]] ; then
       iptables -t nat -A PREROUTING -i $iface_pub -p tcp --dport "${port_dict[$service]}" -j DNAT --to "${ip_web}:${port_dict[$service]}" && \
-      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}PREROUTING${COLOR_DEFAULT} from the ${COLOR_RED}INTERNET${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
 
@@ -158,16 +157,24 @@ done
 # WEB to DB  ENABLE
 service=$db_name
 iptables -A FORWARD -s $ip_web -d $ip_db -p tcp --dport "${port_dict[$service]}" -j $allow && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}WEB Server${COLOR_DEFAULT} to the ${COLOR_BLUE}DATABASE${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}FORWARD${COLOR_DEFAULT} from the ${COLOR_RED}WEB Server${COLOR_DEFAULT} to the ${COLOR_BLUE}DATABASE${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
 # DB to WEB  ENABLE
 iptables -A FORWARD -s $ip_db -d $ip_web -p tcp --dport "${port_dict[$service]}" -j $allow && \
-printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}DATABASE${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}FORWARD${COLOR_DEFAULT} from the ${COLOR_RED}DATABASE${COLOR_DEFAULT} to the ${COLOR_BLUE}WEB Server${COLOR_DEFAULT}\tprotocol:${COLOR_DEFAULT} ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
 
 # LAN to DMZ ENABLE
 for service in "${!dmz_local_enabled[@]}"; do
   if [[ 1 -eq "${dmz_local_enabled[$service]}" ]] ; then
       iptables -A FORWARD -s $net_emp -d $net_dmz -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
-      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}LAN${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}NEW${COLOR_DEFAULT} from the ${COLOR_RED}LAN${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
+    fi
+done
+
+# NAT to DMZ ENABLE
+for service in "${!dmz_public_enabled[@]}"; do
+  if [[ 1 -eq "${dmz_local_enabled[$service]}" ]] ; then
+      iptables -A FORWARD -i $iface_pub -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
+      printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled ${COLOR_YELLOW}NEW${COLOR_DEFAULT} from the ${COLOR_RED}NAT${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
 

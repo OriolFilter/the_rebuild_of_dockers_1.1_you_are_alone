@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env bash
 server_ip="192.168.1.212"
 
 declare -A port_dict=(["SFTP"]=23
