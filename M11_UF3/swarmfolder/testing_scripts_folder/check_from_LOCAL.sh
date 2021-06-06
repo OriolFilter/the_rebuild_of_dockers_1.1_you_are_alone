@@ -60,26 +60,10 @@ declare -A  web_public_enabled=(["HTTP"]=1
 ["HTTPS"]=1
 )
 
-# Functions
-cping () {
-#$1 Is the ip/host to curl/"ping"
-IP="$1";
-echo curl "$1";
-curl "$1" 2> /dev/null;
-echo $?;
-#if [[ "0" -eq "$?" ]] ; then
-#  printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}established connection with the client $IP\n"
-#else
-#  printf "[${COLOR_RED}*${COLOR_DEFAULT}] ${COLOR_RED}Couldn't${COLOR_DEFAULT} ${COLOR_DEFAULT}establish connection with the client $IP\n"
-#fi
-}
-
-
-
 ## WEB
 printf "\nIniciant les probes al servidor WEB\n"
 printf "ping al server WEB amb IP $ip_web\n"
-cping $ip_web;
+ping -c 2 -i 0.2 $ip_web;
 
 for service in "${!web_public_enabled[@]}"; do
     printf "Provant d'accedir al servidor $service amb port ${port_dict[$service]}\n"
@@ -88,8 +72,8 @@ for service in "${!web_public_enabled[@]}"; do
 done
 
 ## BDD
-#printf "ping al server BDD amb IP $ip_db\n"
-#cping $ip_db;
+printf "ping al server BDD amb IP $ip_db\n"
+ping -c 2 -i 0.2 $ip_db;
 printf "Provant d'accedir al servidor POSTGRESQL amb port ${port_dict["POSTGRESQL"]}\n"
 nc -vz $ip_db ${port_dict["POSTGRESQL"]}
 printf "\n"
@@ -98,7 +82,7 @@ printf "\n"
 printf "\nIniciant les probes al servidor DMZ\n"
 
 printf "ping al server DMZ amb IP $ip_dmz\n"
-cping $ip_dmz;
+ping -c 2 -i 0.2 $ip_dmz;
 
 printf "Provant d'accedir als ports del DMZ\n"
 for service in "${!dmz_local_enabled[@]}"; do
@@ -108,7 +92,7 @@ for service in "${!dmz_local_enabled[@]}"; do
 done
 
 printf "Intent de comunicacio amb el client de la xarxa interna: $ip_employee\n"
-cping $ip_employee;
+ping -c 2 -i 0.2 $ip_employee;
 
 
 echo "la nostra ip publica es: $(curl ifconfig.me.)"
@@ -116,4 +100,4 @@ echo "Iniciant CURL a google.es\n";
 curl "google.es";
 
 echo "Check de update\n";
-#sudo apt-get uppdate
+sudo apt-get uppdate
