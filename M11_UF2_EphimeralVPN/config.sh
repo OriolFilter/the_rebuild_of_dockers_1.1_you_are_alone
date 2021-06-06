@@ -54,6 +54,7 @@ export CLIENT_DNS=\"8.8.8.8,8.8.4.4\"
 
 ## Deploy the rest of services;
 
+
 "
 #watch docker service ls;
 
