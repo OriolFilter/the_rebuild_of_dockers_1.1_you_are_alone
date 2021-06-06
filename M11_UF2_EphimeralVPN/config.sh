@@ -55,7 +55,7 @@ export CLIENT_DNS=\"8.8.8.8,8.8.4.4\"
 
 ## Deploy the rest of services;
 
-
+bash install_wireguard_and_move_conf.sh
 "
 #watch docker service ls;
 

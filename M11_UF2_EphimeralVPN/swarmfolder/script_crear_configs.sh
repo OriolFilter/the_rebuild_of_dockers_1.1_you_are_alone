@@ -3,7 +3,7 @@
 
 ## VARS
 # SERVER
-PIP="192.168.1.212" #Public IP
+PIP="192.168.1.117" #Public IP
 POP=51820 # Public Open Port
 IFACE="enp0s8" # Interface to redirect the traffic
 ADDRESS="10.10.6.0/24" # Address to give the server
