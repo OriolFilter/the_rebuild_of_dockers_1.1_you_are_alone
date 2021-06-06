@@ -179,7 +179,7 @@ for service in "${!dmz_public_enabled[@]}"; do
 done
 
 # END
-
+sleep 4
 
 ### PRINT CURRENT FIREWALL RULES
 sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "." && sleep "0.2" && printf "."
