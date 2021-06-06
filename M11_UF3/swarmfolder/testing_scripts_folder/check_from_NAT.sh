@@ -15,10 +15,10 @@ declare -A port_dict=(["SFTP"]=23
 ["POSTGRESQL"]=5432
 )
 
-printf "ping al server amb IP $server_ip"
+printf "ping al server amb IP\n"
 ping -c 4 $server_ip;
 
-printf "Comprovant els ports oberts del servidor $server_ip"
+printf "Comprovant els ports oberts del servidor $server_ip\n"
 for service in "${!port_dict[@]}"; do
     printf "Intent d'accedir al servei $service amb port ${port_dict[$service]}\n"
     nc -vz $server_ip ${port_dict[$service]}

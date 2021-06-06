@@ -19,10 +19,15 @@ kill="DROP"
 allow="ACCEPT"
 
 iptables -F
-ptables  -X
-ptables  -Z
-ptables  -t nat -F
-
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -t raw -F
+iptables -t raw -X
+iptables -t security -F
+iptables -t security -X
 iptables -P INPUT $allow
-iptables -P OUTPUT $allow
 iptables -P FORWARD $allow
+iptables -P OUTPUT $allow

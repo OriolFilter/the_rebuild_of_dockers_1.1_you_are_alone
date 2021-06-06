@@ -13,8 +13,10 @@ declare -A port_enabled=(["SFTP"]=23
 ["OPENFIRE"]=9090
 )
 
+echo "Test de sudo/root accessible"
+sudo echo "Check"
 
 for service in "${!port_enabled[@]}"; do
   echo "listening to port ${port_enabled["DNS"]} for service: $service"
-  bash $(dirname $0)/open_portsh ${port_enabled[$service]} & disown
+  sudo bash $(dirname $0)/open_port.sh ${port_enabled[$service]} & disown
 done

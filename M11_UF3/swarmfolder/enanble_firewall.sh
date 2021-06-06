@@ -37,12 +37,11 @@ iface_dmz="enp0s8"  # DMZ
 iface_lan="enp0s9"  # LAN
 
 ### DMZ
-net_dmz="192.168.254.0"
+net_dmz="192.168.254.0/24"
 net_dmz_mask="24"
 
 ### Employee
-net_emp="10.10.6.0"
-net_emp_mask="24"
+net_emp="10.10.6/24"
 net_emp_gateway="10.10.6.1"
 
 ### Hosts
@@ -119,7 +118,7 @@ printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFA
 #
 ### Enable forwarding
 #
-echo 1 > /proc/sys/net/ipv4/ip_forward && printf "FORWARD ENABLED\n" && \
+echo 1 > /proc/sys/net/ipv4/ip_forward && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled port forwarding in the system\n"
 #
 ##https://serverfault.com/questions/371316/iptables-difference-between-new-established-and-related-packets
@@ -132,8 +131,8 @@ iptables -A FORWARD -p udp --dport ${port_dict["DNS"]} -m state --state NEW -j $
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection public services (WEB && DNS)\n"
 #
 #### MASQUERADE (enable outgoing traffic)
-iptables -t nat -A POSTROUTING -s "${net_emp}/${net_emp_mask}" -o $iface_pub -j MASQUERADE && \
-iptables -t nat -A POSTROUTING -s "${net_dmz}/${net_dmz_mask}" -o $iface_pub -j MASQUERADE && \
+iptables -t nat -A POSTROUTING -s $net_emp -o $iface_pub -j MASQUERADE && \
+iptables -t nat -A POSTROUTING -s $net_dmz -o $iface_pub -j MASQUERADE && \
 printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled connection to the internet\n"
 
 
@@ -167,7 +166,7 @@ printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFA
 # LAN to DMZ ENABLE
 for service in "${!dmz_local_enabled[@]}"; do
   if [[ 1 -eq "${dmz_local_enabled[$service]}" ]] ; then
-      iptables -t nat -A FORWARD -s "${net_emp}/${net_emp_mask}" -d $iface_dmz -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
+      iptables -A FORWARD -s $net_emp -d $net_dmz -p tcp --dport "${port_dict[$service]}" -m state --state NEW -j $allow && \
       printf "[${COLOR_GREEN}*${COLOR_DEFAULT}] ${COLOR_GREEN}Successfully${COLOR_DEFAULT} ${COLOR_DEFAULT}Enabled from the ${COLOR_RED}LAN${COLOR_DEFAULT} to the ${COLOR_BLUE}DMZ${COLOR_DEFAULT}\t\tprotocol: ${COLOR_RED}${port_dict[$service]}${COLOR_DEFAULT} (${COLOR_YELLOW}${service}${COLOR_DEFAULT})\n"
     fi
 done
