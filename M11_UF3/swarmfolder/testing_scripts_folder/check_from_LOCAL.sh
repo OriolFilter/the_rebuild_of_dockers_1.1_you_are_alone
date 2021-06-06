@@ -34,7 +34,7 @@ ip_externa="8.8.8.8"
 ## Dictionaries
 declare -A port_dict=(["SFTP"]=23
 ["SMTP"]=25
-["DNS"]=53
+#["DNS"]=53 # Skipped, DNS machine uses this port by default.
 ["HTTP"]=80
 ["POP3"]=110
 ["NETBIOS"]=139
