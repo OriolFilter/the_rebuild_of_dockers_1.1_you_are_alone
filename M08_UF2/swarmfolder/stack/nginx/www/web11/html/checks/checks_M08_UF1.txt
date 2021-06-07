@@ -3,7 +3,7 @@ echo "M08 UF1"
 
 dig router.ofa.itb
 sleep 1
-dig bdd.jdn.itb
+dig bdd.ofa.itb
 sleep 1
 dig eq1.ofa.itb
 sleep 1
