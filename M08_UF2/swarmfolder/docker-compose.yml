@@ -57,7 +57,7 @@ services:
       - ./stack/cert_ssl:/shared/ssl:ro
       - ./stack/users/passwd:/shared/users/passwd:ro
       - ./stack/users/groups:/shared/users/groups:ro
-      - logs:/logs:rw
+      - ./stack/nginx/www/web11/html/logs:/logs:rw
     deploy:
       restart_policy:
         condition: on-failure
@@ -78,15 +78,13 @@ services:
         # USERS
         # User_list
         - "./stack/sftp_users.conf:/etc/sftp/users.conf:ro"
-        - "./stack/nginx/www/web11/html/shared:/home/a/shared_web/:rw"
+        - "./stack/nginx/www/web22/modificacions:/home/a/shared_web/:rw"
         - "./stack/nginx/www/web11/html/shared:/home/b/shared_web/:rw"
-        - "./stack/shared_dir:/home/a/shared_dir/:rw"
-        - "./stack/shared_dir:/home/b/shared_dir/:rw"
-        - "./stack/shared_dir:/home/profe/shared_dir/:rw"
+        - "./stack/nginx/www/web11/html/shared_dir:/home/a/shared_dir/:rw"
+        - "./stack/nginx/www/web11/html/shared_dir:/home/b/shared_dir/:rw"
+        - "./stack/nginx/www/web11/html/shared_dir:/home/profe/shared_dir/:rw"
 
 networks:
   outside:
     external:
       name: "host"
-volumes:
-  logs:

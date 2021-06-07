@@ -11,16 +11,11 @@ services:
         published: 53
         protocol: tcp
         mode: host
-      - target: 10000
-        published: 10000
-        mode: host
     volumes:
       - ./stack/bind/:/data/bind/etc/
     deploy:
       restart_policy:
         condition: on-failure
-    environment:
-      ROOT_PASSWORD: verysecurepassword
     networks:
       - outside
   dhcp:

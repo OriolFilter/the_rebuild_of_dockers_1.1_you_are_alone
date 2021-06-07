@@ -40,4 +40,4 @@ watch docker stack services $STACK;"
 
 ### Command end
 
-ssh -p $SSHP $SSH -t USERNAME@localhost "bash -c $CMD"
+ssh -p $SSHP $SSH -t $USERNAME@localhost "bash -c $CMD"

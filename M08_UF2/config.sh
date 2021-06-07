@@ -36,7 +36,9 @@ nameserver 8.8.8.8
 \" | sudo tee /etc/resolv.conf;
 
 ##docker stats;
-watch docker stack services $STACK;"
+watch docker stack services $STACK;
+
+"
 
 ### Command end
 

@@ -1,10 +1,13 @@
+# curl https://web11.checks.checks_M08_UF1.txt --insecure | bash
+
 echo "Oriol Filter Anson"
 echo "M08 UF2"
 
 
-firefox web11.OFA.itb
-firefox web22.OFA.itb
-firefox web11.OFA.itb/privatefolder
+
+firefox web11.OFA.itb & disown
+firefox web22.OFA.itb & disown
+firefox web11.OFA.itb/privatefolder & disown
 echo "THIS IS A NEW FILE $(date)"> file.txt &&
 sftp -P 23 a@ftp.ofa.itb:/shared_dir/ <<< "put file.txt" &&
 rm -v file.txt &&
@@ -12,4 +15,5 @@ echo "deleted file 'file.txt'" &&
 cat file.txt &&
 sftp -P 23 b@ftp.ofa.itb:/shared_dir/ <<< "get file.txt" &&
 echo "<h2>THIS IS A NEW PAGE $(date)</h2>"> file.html &&
-sftp -P 23 profe@ftp.ofa.itb:/shared_web/ <<< "put file.html"
+sftp -P 23 profe@ftp.ofa.itb:/shared_web/ <<< "put file.html" &&
+firefox web22.OFA.itb/modificacions & disown

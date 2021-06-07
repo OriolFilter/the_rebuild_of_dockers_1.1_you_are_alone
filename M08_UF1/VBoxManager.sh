@@ -17,14 +17,12 @@ SSH="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o loglevel=ERR
 # VBOX
 NAMEVM="MAINS-OFA" #Name Virtual Machine
 RAMM=2048 # 2GB 
-#VMF="$1" # Virtual Machine File
 VMF="${SCRIPTFOLDER}/../UbuSrvDockerNFS.vdi" # Virtual Machine File
 # Maquina
 
 IPL="10.10.6.254" #IP local
 IPL="10.10.6.1" #IP local
 IPLN="10.10.6.0" #IP local NETWORK/24, podria fer una variable per la xarxa
-# DGVM="192.168.1.1" "Default Gateway Virtual Machine
 USER='sjo'
 
 # SSH
@@ -32,23 +30,18 @@ SSHP=2222
 
 
 # Mostrar Config
-
 printf "~~~~~~\ :$NAMEVM:
 ~~~~~~\ $RAMM MB RAM
 ~~~~~~\ $VMF HDD
 ~~~~~~\ $IPL/24
 ~~~~~~\ $SSHP port SSH
 " 
-# ~~~~~~\ $DGVM: Gateway (DISABLED)
-
 ### Executa VDEServer SENSE el DPIPE
 
 ./${SCRIPTFOLDER}/VDEServer.bash 1 & disown
 
-
 ## Neteja
 rm CLAU
-
 
 # Administrar VBox
 
@@ -78,11 +71,9 @@ vbNICS="--nic1 nat --nictype1 virtio --nic2 generic --nictype2 virtio --nicgener
 VBoxManage modifyvm "$NAMEVM" --ostype "Ubuntu_64" --ioapic off $vbTUNEJOS $vbNICS --natpf1 "guestssh,tcp,,$SSHP,,22" # Port forwarding Virtualbox
 
 # Iniciar maquina virtual sense finestra (headless)
-
 VBoxManage startvm "$NAMEVM" --type headless
 
 # Generar claus SSH sense contrasenya
-
 rm -v CLAU* # per eliminar fitxers ja existents i evitar conflictes
 ssh-keygen -N "" -f CLAU # Genera una clau SSH,  -N 'CONTRASENYA' en aquest cas està buida  -f Fitxer de destí
 WORKED=1 # Variable que mantindrà el bucle obert
@@ -126,7 +117,6 @@ network:
       dhcp4: no
       dhcp6: no
       addresses: [$IPL/24]
-#      gateway4: $IPL
       nameservers:
         addresses: [127.0.0.1,8.8.4.4]
 FINAL
@@ -139,13 +129,9 @@ sudo hostnamectl set-hostname '$NAMEVM' ;
 sudo cp /home/$USER/netplan.yaml /etc/netplan/01-netcfg.yaml ;
 sudo netplan apply;
 " # Hem guardat una serie de comandes dins una variable
-echo preSPC
 ssh -p $SSHP $SSH -t $USER@localhost "bash -c $CMD" # Executem la variable creada
-echo postSPC
-
 
 # Modificar IP de xarxa/IP forwarding (iptables)
-
 cat << "FINAL" > /tmp/cmd
 #cat $0
 sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
@@ -154,11 +140,8 @@ sudo iptables -t nat -A POSTROUTING -s 10.10.6.0/24 -o enp0s3 -j MASQUERADE
 
 FINAL
 # Hem guardat comandes dins del cmd
-
 scp -P $SSHP $SSH  /tmp/cmd "$USER@localhost:/home/$USER/cmd" # Movem el fitxer de comandes al servidor
 ssh -p $SSHP $SSH -t $USER@localhost bash "/home/$USER/cmd" # Executem el fitxer de comandes al servidor
-
-
 
 echo ssh -p $SSHP $SSH -t $USER@localhost "$CMD"
 ssh -p $SSHP $SSH -t $USER@localhost "$CMD"
@@ -176,8 +159,6 @@ FINAL
 
 scp -P $SSHP "$SSH"  /tmp/cmd "$USER@localhost:/home/$USER/cmd" # Movem el fitxer de comandes al servidor
 ssh -p $SSHP "$SSH" -t "$USER@localhost" bash "/home/$USER/cmd" # Executem el fitxer de comandes al servidor
-
-
 
 ### Docker, modificar
 
@@ -208,6 +189,5 @@ echo "##############################Cració de docker swarm"
 ssh -p $SSHP $SSH -t $USER@localhost "docker swarm init --advertise-addr $IPL --default-addr-pool 10.77.0.0/16 --default-addr-pool-mask-length 24" # Iniciar swarm
 
 # Executar config.sh
-
 ./$SCRIPTFOLDER/$PART2SCRIPT
 
