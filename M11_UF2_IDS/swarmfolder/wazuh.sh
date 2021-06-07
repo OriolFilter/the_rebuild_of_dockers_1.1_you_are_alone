@@ -5,32 +5,46 @@
 #https://www.elastic.co/blog/improve-security-analytics-with-the-elastic-stack-wazuh-and-ids
 
 cd ~/swarmfolder
+# We are currently working from the directory ~/swarmfolder
 
 ## Changes the memory limit for the virtual machines
 sudo sysctl -w vm.max_map_count=262144
 
-# We are currently working in the directory ~/swarmfolder
-
-# Suricata
+############
+# Suricata #
+############
+# Installation
 curl -O https://copr.fedorainfracloud.org/coprs/jasonish/suricata-stable/repo/epel-7/jasonish-suricata-stable-epel-7.repo
-apt-get install -y suricata
+sudo apt-get install -y suricata
+# Configuration
+## Installing new rules
 wget https://rules.emergingthreats.net/open/suricata-4.0/emerging.rules.tar.gz
 tar zxvf emerging.rules.tar.gz
-rm /etc/suricata/rules/* -f
-mv rules/*.rules /etc/suricata/rules/
-rm -f /etc/suricata/suricata.yaml
-wget -O /etc/suricata/suricata.yaml http://www.branchnetconsulting.com/wazuh/suricata.yaml
+#sudo rm /etc/suricata/rules/* -f
+sudo mv rules/*.rules /etc/suricata/rules/ -fa # Force & preserve the file Attributes (timestamp, permissions, etc.)
+sudo mv /etc/suricata/suricata.yaml /etc/suricata/suricata.yaml.old # We do a backup from the old suricata yaml since we are going to import our own one
+# This is the template we used to create our suricata.yaml with our own interfaces:
+# http://www.branchnetconsulting.com/wazuh/suricata.yaml
+sudo mv suricata.yaml /etc/suricata/suricata.yaml
+# Enabling/Initialising
 systemctl daemon-reload
 systemctl enable suricata
 systemctl start suricata
+# We activated the wazuh agent with the new configuration
 # Show current suricata info
 suricata --build-info
 sleep 5
 
 
+###############
+# Wazuh Agent #
+###############
 
-# Wazuh Agent
-# Configuration that allows the agent to parse the json data from suricata.
+# Configuration that allows the Wazuh agent to parse the json data from suricata.
+
+# Installation
+curl -so wazuh-agent.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.1.5-1_amd64.deb && sudo WAZUH_MANAGER='wazuh' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent.deb
+# Configuration
 printf "
 <agent_config>
     <localfile>
@@ -39,27 +53,26 @@ printf "
     </localfile>
 </agent_config>
 " | sudo tee  /var/ossec/etc/shared/agent.conf
-
-
-
-## Clones Repository
-#cd wazuh-docker
-### Deploys Default Container with default values
-#docker-compose up -d
-
-# Wazuh Agent
-curl -so wazuh-agent.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.1.5-1_amd64.deb && sudo WAZUH_MANAGER='wazuh' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent.deb
+# Enabling/Initialising
 sudo systemctl daemon-reload
 sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
+# We activated the wazuh agent with the new configuration
 
-#Start Wazuh Manager in background
+
+#################
+# Wazuh Manager #
+#################
 ### Wazuh Manager
-cd wazuh-docker
 git clone https://github.com/wazuh/wazuh-docker.git -b v4.1.5 --depth=1
+cd wazuh-docker
+# Generates certificates automatically, we could afterwards replace it.
 docker-compose -f generate-opendistro-certs.yml run --rm generator
 docker-compose -f production-cluster.yml up -d
+# Started the service in the background
 
+
+# Ways to test the IDS
 echo "ways to trigger events:"
 printf "
 ## Trigger alerts (sorted by less to higher)
