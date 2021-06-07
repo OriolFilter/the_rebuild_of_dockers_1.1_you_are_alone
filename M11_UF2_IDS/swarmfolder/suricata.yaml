@@ -1,0 +1,492 @@
+%YAML 1.1
+---
+
+max-pending-packets: 5000
+
+default-log-dir: /var/log/suricata/
+
+outputs:
+
+  - fast:
+      enabled: yes
+      filename: fast.log
+      append: yes
+
+  - unified2-alert:
+      enabled: yes
+      filename: unified2.alert
+
+  - http-log:
+      enabled: yes
+      filename: http.log
+      append: yes
+  - tls-log:
+      enabled: yes  # Log TLS connections.
+      filename: tls.log # File to store TLS logs.
+      extended: yes # Log extended information like fingerprint
+      certs-log-dir: certs # directory to store the certificates files
+
+  - pcap-info:
+      enabled: no
+
+  - pcap-log:
+      enabled:  no
+      filename: log.pcap
+
+      limit: 1000mb
+
+      max-files: 2000
+
+      mode: normal # normal or sguil.
+      use-stream-depth: no #If set to "yes" packets seen after reaching stream inspection depth are ignored. "no" logs all packets
+
+  - alert-debug:
+      enabled: no
+      filename: alert-debug.log
+      append: yes
+      #filetype: regular # 'regular', 'unix_stream' or 'unix_dgram'
+
+  - alert-prelude:
+      enabled: no
+      profile: suricata
+      log-packet-content: no
+      log-packet-header: yes
+
+  - stats:
+      enabled: yes
+      filename: stats.log
+      interval: 8
+
+  - syslog:
+      enabled: yes
+      facility: local5
+
+  - drop:
+      enabled: no
+      filename: drop.log
+      append: yes
+
+  - file-store:
+      enabled: no       # set to yes to enable
+      log-dir: files    # directory to store the files
+      force-magic: no   # force logging magic on all stored files
+      force-md5: no     # force logging of md5 checksums
+
+  - file-log:
+      enabled: no
+      filename: files-json.log
+      append: yes
+
+      force-magic: no   # force logging magic on all logged files
+      force-md5: no     # force logging of md5 checksums
+
+  - eve-log:
+      enabled: yes
+      filetype: regular #regular|syslog|unix_dgram|unix_stream|redis
+      filename: eve.json
+      types:
+        - alert:
+            metadata: yes              # add L7/applayer fields, flowbit and other vars to the alert
+
+            tagged-packets: yes
+
+            xff:
+              enabled: no
+              mode: extra-data
+              deployment: reverse
+              header: X-Forwarded-For
+
+
+magic-file: /usr/share/file/magic
+
+nfq:
+af-packet:
+  - interface: enp0s8
+    threads: 1
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    #copy-mode: ips
+    #copy-iface: eth1
+  - interface: enp0s3
+    threads: 1
+    cluster-id: 98
+    cluster-type: cluster_flow
+    defrag: yes
+
+detect-engine:
+  - profile: medium
+  - custom-values:
+      toclient-src-groups: 2
+      toclient-dst-groups: 2
+      toclient-sp-groups: 2
+      toclient-dp-groups: 3
+      toserver-src-groups: 2
+      toserver-dst-groups: 4
+      toserver-sp-groups: 2
+      toserver-dp-groups: 25
+  - sgh-mpm-context: auto
+  - inspection-recursion-limit: 3000
+
+threading:
+
+  set-cpu-affinity: no
+  cpu-affinity:
+    - management-cpu-set:
+        cpu: [ 0 ]  # include only these cpus in affinity settings
+    - receive-cpu-set:
+        cpu: [ 0 ]  # include only these cpus in affinity settings
+    - decode-cpu-set:
+        cpu: [ 0, 1 ]
+        mode: "balanced"
+    - stream-cpu-set:
+        cpu: [ "0-1" ]
+    - detect-cpu-set:
+        cpu: [ "all" ]
+        mode: "exclusive" # run detect threads in these cpus
+        prio:
+          low: [ 0 ]
+          medium: [ "1-2" ]
+          high: [ 3 ]
+          default: "medium"
+    - verdict-cpu-set:
+        cpu: [ 0 ]
+        prio:
+          default: "high"
+    - reject-cpu-set:
+        cpu: [ 0 ]
+        prio:
+          default: "low"
+    - output-cpu-set:
+        cpu: [ "all" ]
+        prio:
+           default: "medium"
+
+  detect-thread-ratio: 1.5
+
+cuda:
+  - mpm:
+      packet-buffer-limit: 2400
+      packet-size-limit: 1500
+      packet-buffers: 10
+      batching-timeout: 1
+      page-locked: enabled
+      device-id: 0
+      cuda-streams: 2
+mpm-algo: ac
+
+pattern-matcher:
+  - b2gc:
+      search-algo: B2gSearchBNDMq
+      hash-size: low
+      bf-size: medium
+  - b2gm:
+      search-algo: B2gSearchBNDMq
+      hash-size: low
+      bf-size: medium
+  - b2g:
+      search-algo: B2gSearchBNDMq
+      hash-size: low
+      bf-size: medium
+  - b3g:
+      search-algo: B3gSearchBNDMq
+      hash-size: low
+      bf-size: medium
+  - wumanber:
+      hash-size: low
+      bf-size: medium
+
+defrag:
+  trackers: 65535 # number of defragmented flows to follow
+  max-frags: 65535 # number of fragments to keep (higher than trackers)
+  prealloc: yes
+  timeout: 60
+
+flow:
+  memcap: 32mb
+  hash-size: 65536
+  prealloc: 10000
+  emergency-recovery: 30
+
+flow-timeouts:
+
+  default:
+    new: 30
+    established: 300
+    closed: 0
+    emergency-new: 10
+    emergency-established: 100
+    emergency-closed: 0
+  tcp:
+    new: 60
+    established: 3600
+    closed: 120
+    emergency-new: 10
+    emergency-established: 300
+    emergency-closed: 20
+  udp:
+    new: 30
+    established: 300
+    emergency-new: 10
+    emergency-established: 100
+  icmp:
+    new: 30
+    established: 300
+    emergency-new: 10
+    emergency-established: 100
+
+stream:
+  memcap: 32mb
+  checksum-validation: yes      # reject wrong csums
+  inline: no                    # no inline mode
+  reassembly:
+    memcap: 64mb
+    depth: 1mb                  # reassemble 1mb into a stream
+    toserver-chunk-size: 2560
+    toclient-chunk-size: 2560
+
+host:
+  hash-size: 4096
+  prealloc: 1000
+  memcap: 16777216
+
+logging:
+  default-log-level: info
+  default-output-filter:
+  outputs:
+  - console:
+      enabled: yes
+  - file:
+      enabled: yes
+      filename: /var/log/suricata.log
+  - syslog:
+      enabled: yes
+      facility: local5
+      format: "[%i] <%d> -- "
+
+pfring:
+  - interface: enp0s3
+    threads: 1
+    cluster-id: 99
+    cluster-type: cluster_round_robin
+  - interface: enp0s8
+    threads: 3
+    cluster-id: 93
+    cluster-type: cluster_flow
+
+pcap:
+  - interface: enp0s3
+    checksum-validation: yes
+    checksum-checks: auto
+  - interface: enp0s8
+    checksum-validation: yes
+    checksum-checks: auto
+
+ipfw:
+default-rule-path: /etc/suricata/rules/
+rule-files:
+
+#Malware/trojan oriented rules
+ - emerging-trojan.rules
+ - emerging-malware.rules
+ - emerging-mobile_malware.rules
+ - emerging-worm.rules
+ - emerging-user_agents.rules
+ - emerging-current_events.rules
+
+#important but relatively low load rules you'll likely want to keep on
+ - emerging-ftp.rules
+ - emerging-pop3.rules
+ - emerging-rpc.rules
+ - emerging-attack_response.rules
+# - emerging-icmp.rules
+ - emerging-scan.rules
+ - emerging-voip.rules
+ - emerging-imap.rules
+ - emerging-web_server.rules
+ - emerging-smtp.rules
+ - emerging-dns.rules
+ - emerging-misc.rules
+ - emerging-snmp.rules
+ - emerging-sql.rules
+ - emerging-dos.rules
+ - emerging-telnet.rules
+ - emerging-exploit.rules
+ - emerging-tftp.rules
+
+#useful but often high load rules. Look here for performance tuning
+ - emerging-web_client.rules
+ - emerging-netbios.rules
+
+#things you'll want to look through and consider policy needs
+ - emerging-policy.rules
+# - emerging-games.rules
+ - emerging-p2p.rules
+ - emerging-chat.rules
+
+#informational, not recommended for high speed nets
+# - emerging-icmp_info.rules
+# - emerging-info.rules
+# - emerging-shellcode.rules
+# - emerging-inappropriate.rules
+# - emerging-web_specific_apps.rules
+# - emerging-activex.rules
+
+#ip based rules
+ - botcc.rules
+# - botcc.portgrouped.rules
+ - ciarmy.rules
+ - compromised.rules
+ - drop.rules
+ - dshield.rules
+ - tor.rules
+
+#only use the scada_special if you have the scada extensions compiled int
+# - emerging-scada_special.rules
+# - emerging-scada.rules
+
+classification-file: /etc/suricata/classification.config
+reference-config-file: /etc/suricata/reference.config
+
+# Holds variables that would be used by the engine.
+vars:
+
+  # Holds the address group vars that would be passed in a Signature.
+  # These would be retrieved during the Signature address parsing stage.
+  address-groups:
+
+    HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,10.10.6.0/24]"
+
+    EXTERNAL_NET: "any"
+
+    HTTP_SERVERS: "$HOME_NET"
+
+    SMTP_SERVERS: "$HOME_NET"
+
+    SQL_SERVERS: "$HOME_NET"
+
+    DNS_SERVERS: "$HOME_NET"
+
+    TELNET_SERVERS: "$HOME_NET"
+
+    AIM_SERVERS: "$EXTERNAL_NET"
+
+    DNP3_SERVER: "$HOME_NET"
+
+    DNP3_CLIENT: "$HOME_NET"
+
+    MODBUS_CLIENT: "$HOME_NET"
+
+    MODBUS_SERVER: "$HOME_NET"
+
+    ENIP_CLIENT: "$HOME_NET"
+
+    ENIP_SERVER: "$HOME_NET"
+
+
+  # Holds the port group vars that would be passed in a Signature.
+  # These would be retrieved during the Signature port parsing stage.
+  port-groups:
+
+    HTTP_PORTS: "80,81,311,591,593,901,1220,1414,1830,2301,2381,2809,3128,3702,4343,5250,7001,7145,7510,7777,7779,8000,8008,8014,8028,8080,8088,8118,8123,8180,8181,8243,8280,8800,8888,8899,9080,9090,9091,9443,9999,11371,55555"
+
+    SHELLCODE_PORTS: "!80"
+
+    ORACLE_PORTS: 1521
+
+    SSH_PORTS: 22
+
+    DNP3_PORTS: 20000
+
+
+# Set the order of alerts bassed on actions
+# The default order is pass, drop, reject, alert
+action-order:
+  - pass
+  - drop
+  - reject
+  - alert
+
+
+# Host specific policies for defragmentation and TCP stream
+# reassembly.  The host OS lookup is done using a radix tree, just
+# like a routing table so the most specific entry matches.
+host-os-policy:
+  # Make the default policy windows.
+  windows: [0.0.0.0/0]
+  bsd: []
+  bsd-right: []
+  old-linux: []
+  linux: []
+  old-solaris: []
+  solaris: []
+  hpux10: []
+  hpux11: []
+  irix: []
+  macos: []
+  vista: []
+  windows2k3: []
+
+
+# Limit for the maximum number of asn1 frames to decode (default 256)
+asn1-max-frames: 256
+
+engine-analysis:
+  rules-fast-pattern: yes
+  rules: yes
+
+pcre:
+  match-limit: 3500
+  match-limit-recursion: 1500
+
+libhtp:
+
+   default-config:
+     personality: IDS
+     request-body-limit: 0
+     response-body-limit: 0
+     double-decode-path: no
+     double-decode-query: no
+
+profiling:
+
+  rules:
+
+    enabled: yes
+    filename: rule_perf.log
+    append: yes
+
+    # Sort options: ticks, avgticks, checks, matches, maxticks
+    sort: avgticks
+
+    # Limit the number of items printed at exit.
+    #limit: 100
+
+  # packet profiling
+  packets:
+
+    # Profiling can be disabled here, but it will still have a
+    # performance impact if compiled in.
+    enabled: yes
+    filename: packet_stats.log
+    append: yes
+
+    # per packet csv output
+    csv:
+
+      # Output can be disabled here, but it will still have a
+      # performance impact if compiled in.
+      enabled: no
+      filename: packet_stats.csv
+
+  # profiling of locking. Only available when Suricata was built with
+  # --enable-profiling-locks.
+  locks:
+    enabled: no
+    filename: lock_stats.log
+    append: yes
+
+coredump:
+  max-dump: unlimited
+
